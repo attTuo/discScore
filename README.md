@@ -7,4 +7,4 @@
 - Roulette
 - Easy and fast to use on the course
 
-React Native, Expo, TypeScript
+React Native, Expo Router, TypeScript
