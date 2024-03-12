@@ -26,7 +26,7 @@ export default function TabLayout() {
         <Tabs.Screen
         name="index"
         options={{
-          title: 'Start',
+          title: 'Scorecard',
           tabBarIcon: ({ color }) => <TabBarIcon name="users" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -42,13 +42,6 @@ export default function TabLayout() {
               </Pressable>
             </Link>
           ),
-        }}
-      />
-      <Tabs.Screen
-        name="scoreboard"
-        options={{
-          title: 'Scorecard',
-          tabBarIcon: ({ color }) => <TabBarIcon name="calendar-check-o" color={color} />,
         }}
       />
       <Tabs.Screen
