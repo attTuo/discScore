@@ -1,11 +1,10 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, TextInput } from 'react-native';
 import React, { useState } from 'react';
 import { Text, View } from '@/components/Themed';
 
 export default function TabIndexScreen() {
 
   const [groupSize, setGroupSize] = useState<Number>(0);
-
   
   return (
     <View style={styles.container}>
@@ -16,29 +15,50 @@ export default function TabIndexScreen() {
           <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
           <View style={styles.boxholder}>
-            <Pressable style={styles.box}>
+            <Pressable style={styles.box}
+             onPress={() => setGroupSize(1)}
+            >
               <Text style={styles.largeNumber}>1</Text>
             </Pressable>
-            <Pressable style={styles.box}>
+            <Pressable style={styles.box}
+             onPress={() => setGroupSize(2)}
+            >
               <Text style={styles.largeNumber}>2</Text>
             </Pressable>
-            <Pressable style={styles.box}>
+            <Pressable style={styles.box}
+             onPress={() => setGroupSize(3)}
+            >
               <Text style={styles.largeNumber}>3</Text>
             </Pressable>
-            <Pressable style={styles.box}>
+            <Pressable style={styles.box}
+             onPress={() => setGroupSize(4)}
+            >
               <Text style={styles.largeNumber}>4</Text>
             </Pressable>
-            <Pressable style={styles.box}>
+            <Pressable style={styles.box}
+             onPress={() => setGroupSize(5)}
+            >
               <Text style={styles.largeNumber}>5</Text>
-            </Pressable>
-            <Pressable style={styles.box}>
-              <Text style={styles.largeNumber}>+</Text>
-            </Pressable>
+            </Pressable> 
+
+            <View style={styles.box}>
+              <TextInput
+                inputMode='numeric'
+                defaultValue='+'
+                keyboardType='number-pad'
+                onChangeText={ newSize => setGroupSize(Number(newSize))}
+                textAlign='center'
+                style={styles.inputStyle}
+              />
+            </View>   
+            
+            
           </View>
         </View>
 
       : <View style={styles.container}>
           <Text style={styles.title}>Scoreboard</Text>
+          <Text style={styles.title}>{groupSize.toString()}</Text>
           <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
         </View>
       }
@@ -85,5 +105,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 80,
     fontWeight: 'bold',
+  },
+  inputStyle: {
+    height: 120,
+    borderColor: 'grey',
+    borderWidth: 5,
+    fontSize: 80,
+    textAlign: 'center'
   }
 });
