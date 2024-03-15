@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, TextInput } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, TextInput } from 'react-native';
 import React, { useState } from 'react';
 import { Text, View } from '@/components/Themed';
 
@@ -45,6 +45,7 @@ export default function TabIndexScreen() {
               <TextInput
                 inputMode='numeric'
                 defaultValue='+'
+                placeholderTextColor='#eee'
                 keyboardType='number-pad'
                 onChangeText={ newSize => setGroupSize(Number(newSize))}
                 textAlign='center'
@@ -58,8 +59,38 @@ export default function TabIndexScreen() {
 
       : <View style={styles.container}>
           <Text style={styles.title}>Scoreboard</Text>
-          <Text style={styles.title}>{groupSize.toString()}</Text>
-          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+          <Text style={styles.title}>Players: {groupSize.toString()}</Text>
+          
+          <ScrollView style={styles.scrollBox}>
+
+            <View style={styles.scoreCard}>
+
+              <View style={{flex: 1}}>
+                <Text style={styles.playerName}>Player 1 name</Text>
+              </View>
+              
+              <View style={styles.scoreCardContent}>
+                <Pressable style={styles.scoreButton}>
+                  <Text style={styles.buttonText}>-2</Text>
+                </Pressable>
+                <Pressable style={styles.scoreButton}>
+                  <Text style={styles.buttonText}>-1</Text>
+                </Pressable>
+                <Pressable style={styles.scoreButton}>
+                  <Text style={styles.buttonText}>0</Text>
+                </Pressable>
+                <Pressable style={styles.scoreButton}>
+                  <Text style={styles.buttonText}>+1</Text>
+                </Pressable>
+                <Pressable style={styles.scoreButton}>
+                  <Text style={styles.buttonText}>+2</Text>
+                </Pressable>
+              </View>
+              
+            </View>
+
+          </ScrollView>
+
         </View>
       }
     </View>  
@@ -75,7 +106,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: 'bold',
-    marginTop: 20
+    alignSelf: 'center'
   },
   separator: {
     marginTop: 30,
@@ -111,6 +142,41 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     borderWidth: 5,
     fontSize: 80,
+    color: '#eee',
     textAlign: 'center'
+  },
+  scrollBox: {
+    marginTop: 20
+  },
+  scoreCard: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#eee',
+    paddingVertical: 5
+  },
+  playerName: {
+    fontSize: 25,
+  },
+  scoreCardContent: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  buttonText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    alignSelf: 'center'
+  },
+  scoreButton: {
+    width: 50,
+    height: 50,
+    borderWidth: 2,
+    borderColor: '#eee',
+    textAlign: 'center',
+    margin: 5
   }
 });
