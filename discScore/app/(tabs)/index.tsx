@@ -1,97 +1,144 @@
-import { Pressable, ScrollView, StyleSheet, TextInput } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import React, { useState } from 'react';
-import { Text, View } from '@/components/Themed';
+import { Text } from '@/components/Themed';
 
 export default function TabIndexScreen() {
 
-  const [groupSize, setGroupSize] = useState<Number>(0);
+  const [groupSize, setGroupSize] = useState<number>(0);
+  const [score, setScore] = useState<number>(0);
+  const [group, setGroup] = useState<number[]>([]);
+
+  const intializePlayers = (num: number): void => {
+
+    setGroup([]);
+    
+    const arr: number[] = [];
+
+    for (let i: number = 0;i < num; i++) {
+      arr.push(i + 1);
+    }
+
+    setGroup(arr);
+    setGroupSize(num);
+  }
+
+  const countScore = (num: number, operation: string): void => {
+
+    let newScore: number = score;
+
+    if (operation === 'subtract') {
+      newScore = newScore - num;
+    }
+    else if (operation === 'add') {
+      newScore = newScore + num;
+    }
+
+    setScore(newScore);
+  }
   
   return (
     <View style={styles.container}>
 
-      { (groupSize == 0)
-      ? <View style={styles.container}>
-          <Text style={styles.title}>Choose group size</Text>
-          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      { (groupSize == 0 || group.length < 1)
+        ? <View style={styles.container}>
 
-          <View style={styles.boxholder}>
-            <Pressable style={styles.box}
-             onPress={() => setGroupSize(1)}
-            >
-              <Text style={styles.largeNumber}>1</Text>
-            </Pressable>
-            <Pressable style={styles.box}
-             onPress={() => setGroupSize(2)}
-            >
-              <Text style={styles.largeNumber}>2</Text>
-            </Pressable>
-            <Pressable style={styles.box}
-             onPress={() => setGroupSize(3)}
-            >
-              <Text style={styles.largeNumber}>3</Text>
-            </Pressable>
-            <Pressable style={styles.box}
-             onPress={() => setGroupSize(4)}
-            >
-              <Text style={styles.largeNumber}>4</Text>
-            </Pressable>
-            <Pressable style={styles.box}
-             onPress={() => setGroupSize(5)}
-            >
-              <Text style={styles.largeNumber}>5</Text>
-            </Pressable> 
+            <Text style={styles.title}>Choose group size</Text>
 
-            <View style={styles.box}>
-              <TextInput
-                inputMode='numeric'
-                defaultValue='+'
-                placeholderTextColor='#eee'
-                keyboardType='number-pad'
-                onChangeText={ newSize => setGroupSize(Number(newSize))}
-                textAlign='center'
-                style={styles.inputStyle}
-              />
-            </View>   
-            
-            
-          </View>
-        </View>
+            <View style={styles.boxholder}>
 
-      : <View style={styles.container}>
-          <Text style={styles.title}>Scoreboard</Text>
-          <Text style={styles.title}>Players: {groupSize.toString()}</Text>
-          
-          <ScrollView style={styles.scrollBox}>
+              <Pressable style={styles.box}
+                onPress={() => intializePlayers(1)}
+              >
+                <Text style={styles.largeNumber}>1</Text>
+              </Pressable>
 
-            <View style={styles.scoreCard}>
+              <Pressable style={styles.box}
+                onPress={() => intializePlayers(2)}
+              >
+                <Text style={styles.largeNumber}>2</Text>
+              </Pressable>
 
-              <View style={{flex: 1}}>
-                <Text style={styles.playerName}>Player 1 name</Text>
-              </View>
-              
-              <View style={styles.scoreCardContent}>
-                <Pressable style={styles.scoreButton}>
-                  <Text style={styles.buttonText}>-2</Text>
-                </Pressable>
-                <Pressable style={styles.scoreButton}>
-                  <Text style={styles.buttonText}>-1</Text>
-                </Pressable>
-                <Pressable style={styles.scoreButton}>
-                  <Text style={styles.buttonText}>0</Text>
-                </Pressable>
-                <Pressable style={styles.scoreButton}>
-                  <Text style={styles.buttonText}>+1</Text>
-                </Pressable>
-                <Pressable style={styles.scoreButton}>
-                  <Text style={styles.buttonText}>+2</Text>
-                </Pressable>
-              </View>
-              
+              <Pressable style={styles.box}
+                onPress={() => intializePlayers(3)}
+              >
+                <Text style={styles.largeNumber}>3</Text>
+              </Pressable>
+
+              <Pressable style={styles.box}
+                onPress={() => intializePlayers(4)}
+              >
+                <Text style={styles.largeNumber}>4</Text>
+              </Pressable>
+
+              <Pressable style={styles.box}
+                onPress={() => intializePlayers(5)}
+              >
+                <Text style={styles.largeNumber}>5</Text>
+              </Pressable> 
+
+              <View style={styles.box}>
+                <TextInput
+                  inputMode='numeric'
+                  defaultValue='+'
+                  placeholderTextColor='#eee'
+                  keyboardType='number-pad'
+                  onChangeText={ newSize => intializePlayers(Number(newSize))}
+                  textAlign='center'
+                  style={styles.inputStyle}
+                />
+              </View>   
             </View>
+          </View>
 
-          </ScrollView>
+        : <View style={styles.container}>
 
-        </View>
+            <Text style={styles.title}>Scoreboard</Text>
+            <Text style={styles.title}>Players: {groupSize.toString()}</Text>
+            
+            <ScrollView style={styles.scrollBox}>
+
+              {group.map((personId: number, idx: number) => (
+
+                <View style={styles.scoreCard} key={idx}>
+
+                  <View style={{flex: 1}}>
+                    <Text style={styles.playerName}>Player {personId} name</Text>
+                  </View>
+
+                  <View style={styles.scoreCardContent}>
+
+                    <Pressable style={styles.scoreButton}
+                      onPress={() => countScore(2, 'subtract')}
+                    >
+                      <Text style={styles.buttonText}>-2</Text>
+                    </Pressable>
+
+                    <Pressable style={styles.scoreButton}
+                      onPress={() => countScore(1, 'subtract')}
+                    >
+                      <Text style={styles.buttonText}>-1</Text>
+                    </Pressable>
+
+                    <Pressable style={styles.scoreButton}>
+                      <Text style={styles.buttonText}>{score.toString()}</Text>
+                    </Pressable>
+
+                    <Pressable style={styles.scoreButton}
+                      onPress={() => countScore(1, 'add')}
+                    >
+                      <Text style={styles.buttonText}>+1</Text>
+                    </Pressable>
+
+                    <Pressable style={styles.scoreButton}
+                      onPress={() => countScore(2, 'add')}
+                    >
+                      <Text style={styles.buttonText}>+2</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
       }
     </View>  
   );
