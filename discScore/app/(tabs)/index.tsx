@@ -113,7 +113,15 @@ export default function TabIndexScreen() {
                 <View style={styles.scoreCard} key={idx}>
 
                   <View style={styles.playerInfo}>
-                    <Text style={styles.playerName}>{player.name}</Text>
+
+                  <View style={styles.playerName}>
+                    <TextInput
+                      defaultValue={`${player.name}`}
+                      onChangeText={newName => {group[player.id - 1].name = newName}}
+                      style={styles.nameInput}
+                    />
+                  </View>
+
                     <Text style={styles.playerScore}>{player.score}</Text>
                   </View>
 
@@ -225,7 +233,14 @@ const styles = StyleSheet.create({
   },
   playerName: {
     flex: 3,
-    fontSize: 25,
+    borderWidth: 2,
+    borderColor: '#eee',
+    color: 'green',
+    margin: 5
+  },
+  nameInput: {
+    fontSize: 30,
+    color:'green'
   },
   playerScore: {
     flex: 1,
