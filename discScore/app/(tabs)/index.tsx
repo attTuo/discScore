@@ -4,27 +4,37 @@ import { Text } from '@/components/Themed';
 
 export default function TabIndexScreen() {
 
+  interface Player {
+    name: string,
+    score: number,
+    id: number
+  }
+
   const [groupSize, setGroupSize] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
-  const [group, setGroup] = useState<number[]>([]);
+  const [group, setGroup] = useState<Player[]>([]);
 
   const intializePlayers = (num: number): void => {
-
-    setGroup([]);
     
-    const arr: number[] = [];
+    const players: Player[] = [];
 
     for (let i: number = 0;i < num; i++) {
-      arr.push(i + 1);
+      players.push(
+        {
+          name: `Player ${i + 1}`,
+          score: 0,
+          id: i + 1 
+        }
+      );
     }
-
-    setGroup(arr);
+    setGroup(players);
     setGroupSize(num);
   }
 
-  const countScore = (num: number, operation: string): void => {
+  const countScore = (num: number, operation: string, playerId: number): void => {
 
-    let newScore: number = score;
+    let arrIdx = playerId - 1;
+    let newScore: number = group[arrIdx].score;
 
     if (operation === 'subtract') {
       newScore = newScore - num;
@@ -33,7 +43,8 @@ export default function TabIndexScreen() {
       newScore = newScore + num;
     }
 
-    setScore(newScore);
+    group[arrIdx].score = newScore;
+    setScore(newScore); //Just a refresh for now, come up with alternative
   }
   
   return (
@@ -97,40 +108,41 @@ export default function TabIndexScreen() {
             
             <ScrollView style={styles.scrollBox}>
 
-              {group.map((personId: number, idx: number) => (
+              {group.map((player: Player, idx: number) => (
 
                 <View style={styles.scoreCard} key={idx}>
 
-                  <View style={{flex: 1}}>
-                    <Text style={styles.playerName}>Player {personId} name</Text>
+                  <View style={styles.playerInfo}>
+                    <Text style={styles.playerName}>{player.name}</Text>
+                    <Text style={styles.playerScore}>{player.score}</Text>
                   </View>
 
                   <View style={styles.scoreCardContent}>
 
                     <Pressable style={styles.scoreButton}
-                      onPress={() => countScore(2, 'subtract')}
+                      onPress={() => countScore(2, 'subtract', player.id)}
                     >
                       <Text style={styles.buttonText}>-2</Text>
                     </Pressable>
 
                     <Pressable style={styles.scoreButton}
-                      onPress={() => countScore(1, 'subtract')}
+                      onPress={() => countScore(1, 'subtract', player.id)}
                     >
                       <Text style={styles.buttonText}>-1</Text>
                     </Pressable>
 
                     <Pressable style={styles.scoreButton}>
-                      <Text style={styles.buttonText}>{score.toString()}</Text>
+                      <Text style={styles.buttonText}>+</Text>
                     </Pressable>
 
                     <Pressable style={styles.scoreButton}
-                      onPress={() => countScore(1, 'add')}
+                      onPress={() => countScore(1, 'add', player.id)}
                     >
                       <Text style={styles.buttonText}>+1</Text>
                     </Pressable>
 
                     <Pressable style={styles.scoreButton}
-                      onPress={() => countScore(2, 'add')}
+                      onPress={() => countScore(2, 'add', player.id)}
                     >
                       <Text style={styles.buttonText}>+2</Text>
                     </Pressable>
@@ -198,14 +210,30 @@ const styles = StyleSheet.create({
   scoreCard: {
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: '#eee',
-    paddingVertical: 5
+    paddingVertical: 5,
+    marginBottom: 20
+  },
+  playerInfo: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start'
   },
   playerName: {
+    flex: 3,
     fontSize: 25,
+  },
+  playerScore: {
+    flex: 1,
+    fontSize: 50,
+    borderWidth: 2,
+    borderColor: '#eee',
+    textAlign: 'center',
+    margin: 5
   },
   scoreCardContent: {
     flex: 1,
