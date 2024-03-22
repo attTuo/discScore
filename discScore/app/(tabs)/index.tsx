@@ -11,6 +11,7 @@ export default function TabIndexScreen() {
   }
 
   const [groupSize, setGroupSize] = useState<number>(0);
+  const [scoreSize, setScoreSize] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
   const [group, setGroup] = useState<Player[]>([]);
 
@@ -18,7 +19,7 @@ export default function TabIndexScreen() {
     
     const players: Player[] = [];
 
-    for (let i: number = 0;i < num; i++) {
+    for (let i: number = 0; i < num; i++) {
       players.push(
         {
           name: `Player ${i + 1}`,
@@ -89,6 +90,7 @@ export default function TabIndexScreen() {
 
               <View style={styles.box}>
                 <TextInput
+                  selectTextOnFocus={true}
                   inputMode='numeric'
                   defaultValue='+'
                   placeholderTextColor='#eee'
@@ -114,14 +116,15 @@ export default function TabIndexScreen() {
 
                   <View style={styles.playerInfo}>
 
-                  <View style={styles.playerName}>
-                    <TextInput
-                      defaultValue={`${player.name}`}
-                      onChangeText={newName => {group[player.id - 1].name = newName}}
-                      style={styles.nameInput}
-                    />
-                  </View>
-
+                    <View style={styles.playerName}>
+                      <TextInput
+                        selectTextOnFocus={true}
+                        defaultValue={`${player.name}`}
+                        onChangeText={newName => {group[player.id - 1].name = newName}}
+                        style={styles.nameInput}
+                      />  
+                    </View>
+                    
                     <Text style={styles.playerScore}>{player.score}</Text>
                   </View>
 
@@ -139,9 +142,19 @@ export default function TabIndexScreen() {
                       <Text style={styles.buttonText}>-1</Text>
                     </Pressable>
 
-                    <Pressable style={styles.scoreButton}>
-                      <Text style={styles.buttonText}>+</Text>
-                    </Pressable>
+                    <View style={styles.scoreButton}>
+                      <TextInput
+                        selectTextOnFocus={true}
+                        inputMode='numeric'
+                        defaultValue='+'
+                        placeholderTextColor='#eee'
+                        keyboardType='number-pad'
+                        textAlign='center'
+                        onChangeText={newScore => setScoreSize(Number(newScore))}
+                        onSubmitEditing={() => countScore(scoreSize, 'add', player.id)}
+                        style={styles.scoreInput}
+                      />
+                    </View> 
 
                     <Pressable style={styles.scoreButton}
                       onPress={() => countScore(1, 'add', player.id)}
@@ -209,7 +222,7 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     borderWidth: 5,
     fontSize: 80,
-    color: '#eee',
+    color: 'blue',
     textAlign: 'center'
   },
   scrollBox: {
@@ -268,5 +281,11 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
     textAlign: 'center',
     margin: 5
+  },
+  scoreInput: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'blue'
   }
 });
