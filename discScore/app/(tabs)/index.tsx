@@ -16,22 +16,22 @@ export default function TabIndexScreen() {
   const [scoreToAdd, setScoreToAdd] = useState<number>(0);
   const [group, setGroup] = useState<Player[]>([]);
 
-  const intializePlayers = (numberOfPLayers: number): void => {
+  const intializePlayers = (numberOfPlayers: number): void => {
     
     const players: Player[] = [];
 
-    for (let i: number = 0; i < numberOfPLayers; i++) {
+    for (let i: number = 0; i < numberOfPlayers; i++) {
       players.push(
         {
           name: `Player ${i + 1}`,
           score: 0,
           id: i + 1,
-          scoreToAdd: '+'
+          scoreToAdd: '+/-'
         }
       );
     }
     setGroup(players);
-    setGroupSize(numberOfPLayers);
+    setGroupSize(numberOfPlayers);
   }
 
   const countScore = (num: number, operation: string, player: Player): void => {
@@ -39,21 +39,24 @@ export default function TabIndexScreen() {
     let arrIdx = player.id - 1;
     let newScore: number = group[arrIdx].score;
 
-    if (operation === 'subtract') {
-      newScore = newScore - num;
-    }
-    else if (operation === 'add') {
-      newScore = newScore + num;
+    if (Number.isInteger(num)) {
+
+      if (operation === 'subtract') {
+        newScore = newScore - num;
+      }
+      else if (operation === 'add') {
+        newScore = newScore + num;
+      }
     }
 
     group[arrIdx].score = newScore;
-    group[arrIdx].scoreToAdd = '+';
+    group[arrIdx].scoreToAdd = '+/-';
 
     /*
       This doesn't do anything, but it is left here to refresh the view. Definitely not ideal but adding user input scores now works as intended.
-      You can see the number as you edit, and the Pressable turns to default - '+' - onSubmitEditing.
+      You can see the number as you edit, and the Pressable turns to default - '+/-' - onSubmitEditing.
     */
-    setScoreToAdd(newScore);  
+      setScoreToAdd(newScore); 
   }
   
   return (
@@ -154,11 +157,20 @@ export default function TabIndexScreen() {
                       <TextInput
                         selectTextOnFocus={true}
                         inputMode='numeric'
-                        value={player.scoreToAdd.toString()}
+                        value={player.scoreToAdd}
                         placeholderTextColor='#eee'
                         keyboardType='number-pad'
                         textAlign='center'
-                        onChangeText={(newScore) => {setScoreSize(Number(newScore)); player.scoreToAdd = newScore}}
+                        onChangeText={(newScore) => {
+
+                          if(Number.isInteger(Number(newScore)) || newScore == '-') {
+                            setScoreSize(Number(newScore));
+                            player.scoreToAdd = newScore;
+                          } else {
+                            setScoreSize(0);
+                            player.scoreToAdd = newScore;
+                          }
+                        }}
                         onSubmitEditing={() => countScore(scoreSize, 'add', player)}
                         style={styles.scoreInput}
                       />
