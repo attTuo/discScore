@@ -7,34 +7,36 @@ export default function TabIndexScreen() {
   interface Player {
     name: string,
     score: number,
-    id: number
+    id: number,
+    scoreToAdd: string
   }
 
   const [groupSize, setGroupSize] = useState<number>(0);
   const [scoreSize, setScoreSize] = useState<number>(0);
-  const [score, setScore] = useState<number>(0);
+  const [scoreToAdd, setScoreToAdd] = useState<number>(0);
   const [group, setGroup] = useState<Player[]>([]);
 
-  const intializePlayers = (num: number): void => {
+  const intializePlayers = (numberOfPLayers: number): void => {
     
     const players: Player[] = [];
 
-    for (let i: number = 0; i < num; i++) {
+    for (let i: number = 0; i < numberOfPLayers; i++) {
       players.push(
         {
           name: `Player ${i + 1}`,
           score: 0,
-          id: i + 1 
+          id: i + 1,
+          scoreToAdd: '+'
         }
       );
     }
     setGroup(players);
-    setGroupSize(num);
+    setGroupSize(numberOfPLayers);
   }
 
-  const countScore = (num: number, operation: string, playerId: number): void => {
+  const countScore = (num: number, operation: string, player: Player): void => {
 
-    let arrIdx = playerId - 1;
+    let arrIdx = player.id - 1;
     let newScore: number = group[arrIdx].score;
 
     if (operation === 'subtract') {
@@ -45,7 +47,13 @@ export default function TabIndexScreen() {
     }
 
     group[arrIdx].score = newScore;
-    setScore(newScore); //Just a refresh for now, come up with alternative
+    group[arrIdx].scoreToAdd = '+';
+
+    /*
+      This doesn't do anything, but it is left here to refresh the view. Definitely not ideal but adding user input scores now works as intended.
+      You can see the number as you edit, and the Pressable turns to default - '+' - onSubmitEditing.
+    */
+    setScoreToAdd(newScore);  
   }
   
   return (
@@ -95,7 +103,7 @@ export default function TabIndexScreen() {
                   defaultValue='+'
                   placeholderTextColor='#eee'
                   keyboardType='number-pad'
-                  onChangeText={ newSize => intializePlayers(Number(newSize))}
+                  onChangeText={newSize => intializePlayers(Number(newSize))}
                   textAlign='center'
                   style={styles.inputStyle}
                 />
@@ -131,13 +139,13 @@ export default function TabIndexScreen() {
                   <View style={styles.scoreCardContent}>
 
                     <Pressable style={styles.scoreButton}
-                      onPress={() => countScore(2, 'subtract', player.id)}
+                      onPress={() => countScore(2, 'subtract', player)}
                     >
                       <Text style={styles.buttonText}>-2</Text>
                     </Pressable>
 
                     <Pressable style={styles.scoreButton}
-                      onPress={() => countScore(1, 'subtract', player.id)}
+                      onPress={() => countScore(1, 'subtract', player)}
                     >
                       <Text style={styles.buttonText}>-1</Text>
                     </Pressable>
@@ -146,24 +154,24 @@ export default function TabIndexScreen() {
                       <TextInput
                         selectTextOnFocus={true}
                         inputMode='numeric'
-                        defaultValue='+'
+                        value={player.scoreToAdd.toString()}
                         placeholderTextColor='#eee'
                         keyboardType='number-pad'
                         textAlign='center'
-                        onChangeText={newScore => setScoreSize(Number(newScore))}
-                        onSubmitEditing={() => countScore(scoreSize, 'add', player.id)}
+                        onChangeText={(newScore) => {setScoreSize(Number(newScore)); player.scoreToAdd = newScore}}
+                        onSubmitEditing={() => countScore(scoreSize, 'add', player)}
                         style={styles.scoreInput}
                       />
                     </View> 
 
                     <Pressable style={styles.scoreButton}
-                      onPress={() => countScore(1, 'add', player.id)}
+                      onPress={() => countScore(1, 'add', player)}
                     >
                       <Text style={styles.buttonText}>+1</Text>
                     </Pressable>
 
                     <Pressable style={styles.scoreButton}
-                      onPress={() => countScore(2, 'add', player.id)}
+                      onPress={() => countScore(2, 'add', player)}
                     >
                       <Text style={styles.buttonText}>+2</Text>
                     </Pressable>
@@ -178,6 +186,7 @@ export default function TabIndexScreen() {
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     alignItems: 'center',
