@@ -48,7 +48,7 @@ export default function TabLayout() {
         name="roulette"
         options={{
           title: 'Roulette',
-          tabBarIcon: ({ color }) => <TabBarIcon name="random" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="dashboard" color={color} />,
         }}
       />
     </Tabs>
