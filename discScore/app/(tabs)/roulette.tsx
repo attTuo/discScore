@@ -7,20 +7,25 @@ export default function TabRouletteScreen() {
 
   const shotArray: string[] = [
     'Backhand',
-    'Forehand'
+    'Forehand',
   ];
   const shapeArray: string[] = [
     'Hyzer',
     'Anhyzer',
-    'Roller',
+    'Roller'
   ];
   const discArray: string[] = [
-    'a Putter',
-    'a Midrange',
-    'a Fairway Driver',
-    'a Distance Driver',
+    'a putter',
+    'a midrange',
+    'a fairway driver',
+    'a distance driver',
     'the most UNDERSTABLE disc in your bag',
-    'the most OVERSTABLE disc in your bag'
+    'the most OVERSTABLE disc in your bag',
+    'any disc, but with your NON-DOMINANT hand',
+    'any disc',
+    'a mini (marker disc)',
+    'any disc, but with the disc UPSIDE DOWN',
+    'a disc decided by the previous player'
   ];
 
   const [shot, setShot] = useState<string>('');
