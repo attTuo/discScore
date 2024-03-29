@@ -13,6 +13,7 @@ export default function TabIndexScreen() {
 
   const [groupSize, setGroupSize] = useState<number>(0);
   const [scoreSize, setScoreSize] = useState<number>(0);
+  const [customGroupSize, setCustomGroupSize] = useState<number>(0);
   const [scoreToAdd, setScoreToAdd] = useState<number>(0);
   const [group, setGroup] = useState<Player[]>([]);
 
@@ -104,9 +105,12 @@ export default function TabIndexScreen() {
                   selectTextOnFocus={true}
                   inputMode='numeric'
                   defaultValue='+'
-                  placeholderTextColor='#eee'
                   keyboardType='number-pad'
-                  onChangeText={newSize => intializePlayers(Number(newSize))}
+                  onChangeText={newSize => setCustomGroupSize(Number(newSize))}
+                  onSubmitEditing={() => {
+                    if(customGroupSize <= 99 && Number.isInteger(customGroupSize))
+                    intializePlayers(customGroupSize)
+                  }}
                   textAlign='center'
                   style={styles.inputStyle}
                 />
