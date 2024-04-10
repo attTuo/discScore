@@ -120,8 +120,7 @@ export default function TabIndexScreen() {
 
         : <View style={styles.container}>
 
-            <Text style={styles.title}>Scoreboard</Text>
-            <Text style={styles.title}>Players: {groupSize.toString()}</Text>
+            <Text style={styles.title}>Group size: {groupSize.toString()}</Text>
             
             <ScrollView style={styles.scrollBox}>
 
@@ -211,7 +210,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: 'bold',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginTop: 15,
+    marginBottom: 20
   },
   separator: {
     marginTop: 30,
@@ -236,6 +237,7 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     borderWidth: 5,
     alignContent: 'center',
+    borderRadius: 10
   },
   largeNumber: {
     textAlign: 'center',
@@ -246,9 +248,10 @@ const styles = StyleSheet.create({
     height: 120,
     borderColor: 'grey',
     borderWidth: 5,
-    fontSize: 80,
-    color: 'blue',
-    textAlign: 'center'
+    fontSize: 75,
+    color: 'white',
+    textAlign: 'center',
+    borderRadius: 10
   },
   scrollBox: {
     marginTop: 20
@@ -259,8 +262,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: '#eee',
-    paddingVertical: 5,
-    marginBottom: 20
+    padding: 7,
+    marginBottom: 20,
+    borderRadius: 10
   },
   playerInfo: {
     flex: 1,
@@ -273,12 +277,14 @@ const styles = StyleSheet.create({
     flex: 3,
     borderWidth: 2,
     borderColor: '#eee',
-    color: 'green',
-    margin: 5
+    margin: 5,
+    borderRadius: 10
   },
   nameInput: {
     fontSize: 30,
-    color:'green'
+    color:'white',
+    marginLeft: 5,
+    paddingBottom: 5
   },
   playerScore: {
     flex: 1,
@@ -286,7 +292,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#eee',
     textAlign: 'center',
-    margin: 5
+    margin: 5,
+    borderRadius: 10,
+    backgroundColor: 'green'
   },
   scoreCardContent: {
     flex: 1,
@@ -295,22 +303,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   buttonText: {
-    fontSize: 30,
+    fontSize: 35,
     fontWeight: 'bold',
     alignSelf: 'center'
   },
   scoreButton: {
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     borderWidth: 2,
     borderColor: '#eee',
     textAlign: 'center',
-    margin: 5
+    margin: 5,
+    borderRadius: 10
   },
   scoreInput: {
-    fontSize: 30,
+    fontSize: 35,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: 'blue'
+    color: 'white'
   }
 });
