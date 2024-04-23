@@ -67,7 +67,8 @@ export default function TabIndexScreen() {
       { (groupSize == 0 || group.length < 1)
         ? <View style={styles.container}>
 
-            <Text style={styles.title}>Choose group size</Text>
+            <Text style={styles.title}>Start a new round</Text>
+            <Text>Choose the group size</Text>
 
             <View style={styles.boxholder}>
 
