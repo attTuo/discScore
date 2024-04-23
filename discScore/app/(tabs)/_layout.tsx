@@ -24,6 +24,13 @@ export default function TabLayout() {
         headerShown: useClientOnlyValue(false, true),
       }}>
         <Tabs.Screen
+        name="roundList"
+          options={{
+            title: 'Rounds',
+            tabBarIcon: ({ color }) => <TabBarIcon name="list-alt" color={color} />,
+          }}
+        />
+        <Tabs.Screen
         name="index"
         options={{
           title: 'Scorecard',
