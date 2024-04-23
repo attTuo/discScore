@@ -1,6 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import React, { useState } from 'react';
 import { Text } from '@/components/Themed';
+import {storeData, getData, removeItem} from '../storage';
 
 export default function TabIndexScreen() {
 
@@ -190,6 +191,18 @@ export default function TabIndexScreen() {
                     >
                       <Text style={styles.buttonText}>+2</Text>
                     </Pressable>
+                    
+                  </View>
+                  <View>
+                    <Pressable style={styles.scoreButton}
+                      onPress={() => storeData({
+                        name: player.name, 
+                        score: player.score
+                      })}
+                    >
+                      <Text> Save Score </Text>
+                    </Pressable>
+
                   </View>
                 </View>
               ))}

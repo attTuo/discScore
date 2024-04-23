@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Text, View } from '@/components/Themed';
+import {storeData, getData, removeItem, RoundScore, getAllData} from '../storage';
 
 export default function TabRouletteScreen() {
 
@@ -31,6 +32,8 @@ export default function TabRouletteScreen() {
   const [shot, setShot] = useState<string>('');
   const [shape, setShape] = useState<string>('');
   const [disc, setDisc] = useState<string>('');
+  const [data, setData] = useState<RoundScore>();
+  const [errorMsg, setErrorMsg] = useState<string>('');
 
   const rollRandom = (): void => {
 
@@ -43,10 +46,35 @@ export default function TabRouletteScreen() {
     return Math.floor(Math.random() * arraySize);
   }
 
+  
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+        setData(await getData())
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    setErrorMsg('');
+
+    if(data){
+      
+      fetchData()
+    } else {
+      setErrorMsg('Failed to fetch data');
+    }
+
+  }, [data]);
+
   return (
     <View style={styles.container}>
 
       <Text style={styles.title}>Roulette</Text>
+      {(errorMsg != '') ? <Text>{errorMsg}</Text> : <Text>{data?.name} - {data?.score}</Text>}
+      <Pressable style={{backgroundColor: 'blue', height: 100, width: 100}} onPress={() => removeItem()}></Pressable>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
       <View style={styles.rouletteContent}>
