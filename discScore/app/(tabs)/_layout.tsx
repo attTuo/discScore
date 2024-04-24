@@ -26,7 +26,7 @@ export default function TabLayout() {
         <Tabs.Screen
         name="roundList"
           options={{
-            title: 'Rounds',
+            title: 'Saved Rounds',
             tabBarIcon: ({ color }) => <TabBarIcon name="list-alt" color={color} />,
           }}
         />
