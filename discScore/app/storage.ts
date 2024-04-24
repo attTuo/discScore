@@ -48,3 +48,13 @@ export const removeItem = async () => {
 
   console.log('Item removed.')
 }
+
+export const clearAll = async () => {
+  try {
+    await AsyncStorage.clear()
+  } catch(error) {
+    console.log(error)
+  }
+
+  console.log('Cleared all AsyncStorage data')
+}

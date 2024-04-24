@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Pressable, StyleSheet, ScrollView } from 'react-native';
 import { Text, View } from '@/components/Themed';
-import {storeData, getData, removeItem, RoundScore, getAllData} from '../storage';
+import {storeData, getData, removeItem, RoundScore, getAllData, clearAll} from '../storage';
 
 export default function TabRoundsScreen() {
  
@@ -26,13 +26,38 @@ export default function TabRoundsScreen() {
     <View style={styles.container}>
 
       <Text style={styles.title}>Saved Rounds</Text>
-      <Text>{data?.name} - {data?.score}</Text>
+      
+      <ScrollView style={styles.scrollBox}>
 
-      <Pressable style={{backgroundColor: 'blue', height: 50, width: 100}} onPress={() => removeItem()}>
-        <Text>Remove item</Text>
-      </Pressable>
+        <View style={styles.listItem}>
 
-      <ScrollView>
+					<Text style={styles.playerName}>{data?.name}</Text>
+					<Text>Score: {data?.score}</Text>
+
+					<Pressable style={styles.removeButton}
+						onPress={() => removeItem()}
+					>
+						<Text style={styles.buttonText}>Remove item</Text>
+					</Pressable>
+        </View>
+
+				<View style={styles.listItem}>
+
+					<Text style={styles.playerName}>{data?.name}</Text>
+					<Text>Score: {data?.score}</Text>
+
+					<Pressable style={styles.removeButton}
+						onPress={() => removeItem()}
+					>
+						<Text style={styles.buttonText}>Remove item</Text>
+					</Pressable>
+        </View>
+
+				<Pressable style={styles.removeButton}
+					onPress={() => clearAll()}
+				>
+					<Text style={styles.buttonText}>CLEAR ALL ASYNC STORAGE DATA</Text>
+				</Pressable>
 
       </ScrollView>
      
@@ -42,12 +67,37 @@ export default function TabRoundsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  title: {
-    fontSize: 35,
-    fontWeight: 'bold',
-  }
+    flex: 1
+	},
+	title: {
+		fontSize: 35,
+		fontWeight: 'bold',
+		alignSelf: 'center'
+	},
+	scrollBox: {
+		padding: 20
+	},
+	listItem: {
+		flex: 1,
+		borderColor: 'purple',
+		borderWidth: 3,
+		backgroundColor: 'green',
+		marginBottom: 10,
+		padding: 10,
+		borderRadius: 10
+	},
+	playerName: {
+		fontSize: 24
+	},
+	removeButton: {
+		textAlign: 'center',
+		backgroundColor: 'blue',
+		alignSelf: 'flex-end',
+		alignItems: 'center',
+		padding: 10,
+		borderRadius: 10
+	},
+	buttonText: {
+		fontSize: 16
+	}
 });
