@@ -1,47 +1,113 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { KeyValuePair } from '@react-native-async-storage/async-storage/lib/typescript/types';
 
 export interface RoundScore {
-	name: string,
-	score: number
+  courseName?: string,
+  date: string,
+  time: string,
+	playerName: string,
+	score: string
 }
 
-export const storeData = async (value: RoundScore) => {
-    try {
-    	const jsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem('round-key', jsonValue);
-			console.log('Item added')
+export interface StorageResult {
+  key: string,
+  value: RoundScore
+}
+  
 
-    } catch (error) {
-      console.log(error)
-    }
-  };
+export const storeCourse = async (value: string) => {
+  
+  try {
 
-export const getData = async () => {
-    try {
-			const jsonValue = await AsyncStorage.getItem('round-key');
-			return jsonValue != null ? JSON.parse(jsonValue) : null;
+    await AsyncStorage.setItem(`${value}`, 'course');
+    console.log('Course added')
 
-    } catch (error) {
-      console.log(error)
-    }
+  } catch (error) {
+    console.log(error)
+  }
 };
 
-export const getAllData = async () => {
+export const getAllCourses = async () => {
+
+  let courses: string[] = [];
 
 	try {
 		const keys = await AsyncStorage.getAllKeys();
 		const result = await AsyncStorage.multiGet(keys);
-		return result.toString;
+    
+    if (result) {
+
+      result.map((item: KeyValuePair) => (
+
+        (item[1] === 'course')
+        ? courses.push(item[0])
+        : void(0) 
+      ))
+    }
+		return courses;
 
 	} catch (error) {
 		console.error(error)
 	}
 }
 
-export const removeItem = async () => {
+
+
+export const storeData = async (value: RoundScore) => {
+  
+  try {
+    const jsonValue = JSON.stringify(value);
+    await AsyncStorage.setItem(`${value.playerName}`, jsonValue);
+    console.log('Item added');
+
+  } catch (error) {
+    console.log(error)
+  }
+};
+
+export const getData = async () => {
 
   try {
-    await AsyncStorage.removeItem('round-key')
+    const jsonValue = await AsyncStorage.getItem('round-key');
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const getAllSavedRounds = async () => {
+
+  let test: StorageResult[] = [];
+
+	try {
+		const keys = await AsyncStorage.getAllKeys();
+		const result = await AsyncStorage.multiGet(keys);
+    
+    if (result) {
+      result.map((item: KeyValuePair, idx: number) => (
+
+        (item[1] !== null && item[1] !== 'course') 
+
+        ? test.push({
+            key: item[0],
+            value: JSON.parse(item[1])
+          })
+        : void(0)
+      ))
+    }
+    console.log(test)
+		return test;
+
+	} catch (error) {
+		console.error(error)
+	}
+}
+
+export const removeItem = async (key: string) => {
+
+  try {
+    await AsyncStorage.removeItem(`${key}`)
   } catch(error) {
     console.log(error)
   }
