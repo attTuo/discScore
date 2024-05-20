@@ -1,7 +1,8 @@
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text } from '@/components/Themed';
-import {storeData, getData, removeItem} from '../storage';
+import {Picker} from '@react-native-picker/picker';
+import { storeData, StorageResult, storeCourse, getAllCourses, getAllSavedRounds } from '../storage';
 
 export default function TabIndexScreen() {
 
@@ -17,6 +18,28 @@ export default function TabIndexScreen() {
   const [customGroupSize, setCustomGroupSize] = useState<number>(0);
   const [scoreToAdd, setScoreToAdd] = useState<number>(0);
   const [group, setGroup] = useState<Player[]>([]);
+  const [selectedCourse, setSelectedCourse] = useState<string>('Unknown Course');
+  const [courses, setCourses] = useState<string[] | undefined>([]);
+  const [errorMsg, setErrorMsg] = useState<string>(''); 
+  const [newCourse, setNewCourse] = useState<string>('Add a new course');
+
+  const fetchData = async () => {
+
+		let test: StorageResult[] | undefined = [];
+    try {
+		
+			await getAllCourses() !== undefined ? setCourses(await getAllCourses()) : setErrorMsg('Problem fetching data')
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+
+    fetchData()
+    
+  },[]);
 
   const intializePlayers = (numberOfPlayers: number): void => {
     
@@ -58,7 +81,7 @@ export default function TabIndexScreen() {
       This doesn't do anything, but it is left here to refresh the view. Definitely not ideal but adding user input scores now works as intended.
       You can see the number as you edit, and the Pressable turns to default - '+/-' - onSubmitEditing.
     */
-      setScoreToAdd(newScore); 
+      setScoreToAdd(newScore);
   }
   
   return (
@@ -67,7 +90,41 @@ export default function TabIndexScreen() {
       { (groupSize == 0 || group.length < 1)
         ? <View style={styles.container}>
 
-            <Text style={styles.title}>Start a new round</Text>
+            { (courses)
+              ? <View>
+                  <Picker
+                    selectedValue={selectedCourse}
+                    style={styles.coursePicker}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setSelectedCourse(itemValue)
+                    }>
+
+                    {courses.map((course: string, idx : number) =>
+                      <Picker.Item label={`${course}`} value={course} key={idx} />
+                    )}
+                    
+                  </Picker>
+
+                </View>
+              :<></>
+            }
+
+            <View style={styles.courseAdder}>
+              <TextInput
+                selectTextOnFocus={true}
+                defaultValue='+'
+                value={newCourse}
+                style={styles.nameInput}
+                onChangeText={newName => setNewCourse(newName)}
+                onSubmitEditing={() => {
+                  storeCourse(newCourse);
+                  setNewCourse('Add a new course');
+                  fetchData();
+                }}
+              />
+              
+            </View> 
+
             <Text>Choose the group size</Text>
 
             <View style={styles.boxholder}>
@@ -122,7 +179,12 @@ export default function TabIndexScreen() {
 
         : <View style={styles.container}>
 
-            <Text style={styles.title}>Group size: {groupSize.toString()}</Text>
+              
+            <Text>Course: {selectedCourse}</Text>      
+            <Text>Group size: {groupSize.toString()}</Text>
+
+            
+
             
             <ScrollView style={styles.scrollBox}>
 
@@ -196,10 +258,16 @@ export default function TabIndexScreen() {
                   </View>
                   <View>
                     <Pressable style={styles.scoreButton}
-                      onPress={() => storeData({
-                        name: player.name, 
-                        score: player.score
-                      })}
+                      onPress={() => {
+                        storeData({
+                          courseName: selectedCourse?.toString(),
+                          date: '12.12.2024',
+                          time: '12:00',
+                          playerName: player.name,
+                          score: player.score.toString()
+                        });
+                        getAllSavedRounds();
+                      }}
                     >
                       <Text> Save Score </Text>
                     </Pressable>
@@ -244,8 +312,8 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   box: {
-    width: 150,
-    height: 150,
+    width: 135,
+    height: 135,
     padding: 10,
     margin: 20,
     borderColor: 'grey',
@@ -255,17 +323,28 @@ const styles = StyleSheet.create({
   },
   largeNumber: {
     textAlign: 'center',
-    fontSize: 80,
+    fontSize: 70,
     fontWeight: 'bold',
   },
   inputStyle: {
-    height: 120,
+    height: 105,
     borderColor: 'grey',
     borderWidth: 5,
-    fontSize: 75,
+    fontSize: 70,
     color: 'white',
     textAlign: 'center',
     borderRadius: 10
+  },
+  coursePicker: {
+    backgroundColor: 'red',
+    color: 'blue',
+    height: 50,
+    width: 300,
+    marginTop: 20
+  },
+  courseAdder: {
+    borderWidth: 2,
+    borderColor: 'blue'
   },
   scrollBox: {
     marginTop: 20
@@ -278,7 +357,8 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
     padding: 7,
     marginBottom: 20,
-    borderRadius: 10
+    borderRadius: 10,
+    backgroundColor: 'green'
   },
   playerInfo: {
     flex: 1,
