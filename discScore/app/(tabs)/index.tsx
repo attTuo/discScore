@@ -2,7 +2,8 @@ import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native
 import React, { useState, useEffect } from 'react';
 import { Text } from '@/components/Themed';
 import {Picker} from '@react-native-picker/picker';
-import { storeData, StorageResult, storeCourse, getAllCourses, getAllSavedRounds } from '../storage';
+import { storeRound, StorageResult, storeCourse, getAllCourses, getAllSavedRounds } from '../storage';
+import {format} from 'date-fns';
 
 export default function TabIndexScreen() {
 
@@ -259,10 +260,10 @@ export default function TabIndexScreen() {
                   <View>
                     <Pressable style={styles.scoreButton}
                       onPress={() => {
-                        storeData({
+                        storeRound({
                           courseName: selectedCourse?.toString(),
-                          date: '12.12.2024',
-                          time: '12:00',
+                          date: `${format(new Date(),'dd.MM.y').toString()}`,
+                          time: `${format(new Date(),'HH:mm').toString()}`,
                           playerName: player.name,
                           score: player.score.toString()
                         });

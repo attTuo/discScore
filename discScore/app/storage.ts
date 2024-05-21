@@ -51,13 +51,11 @@ export const getAllCourses = async () => {
 	}
 }
 
-
-
-export const storeData = async (value: RoundScore) => {
+export const storeRound = async (value: RoundScore) => {
   
   try {
     const jsonValue = JSON.stringify(value);
-    await AsyncStorage.setItem(`${value.playerName}`, jsonValue);
+    await AsyncStorage.setItem(`${value.date}-${value.time}`, jsonValue);
     console.log('Item added');
 
   } catch (error) {
