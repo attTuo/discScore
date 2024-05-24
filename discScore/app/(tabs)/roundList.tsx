@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Pressable, StyleSheet, ScrollView } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { removeItem, getAllSavedRounds, clearAll, StorageResult } from '../storage';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function TabRoundsScreen() {
  
@@ -32,14 +33,14 @@ export default function TabRoundsScreen() {
 
     <View style={styles.container}>
 
-			<View style={{flexDirection: 'row', paddingTop: 10, paddingHorizontal: 20,alignSelf: 'center'}}>
+			<View style={{flexDirection: 'row', paddingTop: 10, paddingHorizontal: 20,alignSelf: 'center', backgroundColor: '#FAF9F6'}}>
 				<Text style={styles.title}>Saved Rounds</Text>
 
 				<Pressable
 					onPress={fetchSavedRounds}
 					style={styles.refreshButton}
 				>
-					<Text>Refresh</Text>
+					<FontAwesome size={28} name='refresh' style={{color: '#FAF9F6'}}/>
 				</Pressable>
 			</View>
 
@@ -116,39 +117,43 @@ export default function TabRoundsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+		backgroundColor: '#FAF9F6'
 	},
 	title: {
 		fontSize: 35,
 		fontWeight: 'bold',
 		alignSelf: 'center',
-		flex: 3
+		flex: 3,
+		color: '#4361ee'
 	},
 	refreshButton: {
-		width: 30,
-		height: 30,
-		borderColor: 'green',
-		borderWidth: 2,
+		width: 20,
+		height: 40,
+		borderColor: '#4361ee',
+		borderWidth: 5,
+		borderRadius: 10,
 		flex: 1,
 		alignItems: 'center',
-		backgroundColor: 'blue'
+		backgroundColor: '#4361ee'
 	},
 	scrollBox: {
 		padding: 20
 	},
 	listItem: {
 		flex: 1,
-		borderColor: 'purple',
-		borderWidth: 3,
-		backgroundColor: 'green',
+		borderColor: '#4361ee',
+		borderWidth: 5,
+		backgroundColor: '#4361ee',
 		marginBottom: 10,
 		padding: 10,
 		borderRadius: 10,
-		flexDirection: 'column'
+		flexDirection: 'column',
+		elevation: 5
 	},
 	upperInfo: {
 		paddingBottom: 5,
-		backgroundColor: 'green',
+		backgroundColor: '#4361ee',
 		flexDirection: 'row'
 	},
 	courseName:{
@@ -160,17 +165,17 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		alignSelf: 'flex-end',
 		flex: 1,
-		backgroundColor: 'green'
+		backgroundColor: '#4361ee'
 	},
 	roundInfo: {
 		flex: 1, 
 		flexDirection: 'row',
-		backgroundColor: 'green'
+		backgroundColor: '#4361ee'
 	},
 	infoColumn: {
 		flex: 1,
 		flexDirection: 'column',
-		backgroundColor: 'green',
+		backgroundColor: '#4361ee',
 	},
 	playerInfo: {
 		flex: 1,
@@ -182,16 +187,18 @@ const styles = StyleSheet.create({
 	},
 	removeButton: {
 		textAlign: 'center',
-		backgroundColor: 'blue',
+		backgroundColor: '#3a0ca3',
 		alignSelf: 'flex-end',
 		alignItems: 'center',
 		padding: 10,
 		borderRadius: 10,
 	},
 	buttonText: {
-		fontSize: 16
+		fontSize: 16,
+		color: '#FAF9F6',
+		fontWeight: 'bold',
 	},
 	flexRow: {
 		flex: 2
-	}
+	},
 });

@@ -48,7 +48,7 @@ export default function TabRouletteScreen() {
     <View style={styles.container}>
 
       <Text style={styles.title}>Roulette</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      <View style={styles.separator} lightColor="#4361ee" darkColor="#4361ee" />
 
       <View style={styles.rouletteContent}>
 
@@ -87,11 +87,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: '#FAF9F6',
+    paddingHorizontal: 20
   },
   title: {
     fontSize: 35,
     fontWeight: 'bold',
+    color: '#4361ee'
   },
   separator: {
     marginVertical: 30,
@@ -99,38 +102,45 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   rouletteContent: {
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#FAF9F6'
   },
   text: {
     fontSize: 25,
-    fontStyle: 'italic'
+    fontStyle: 'italic',
+    color: '#4361ee',
+    backgroundColor: '#FAF9F6'
   },
   icon: {
     fontSize: 100,
-    marginBottom: 50
+    marginBottom: 50,
+    color: '#4361ee'
   },
   rollButton: {
     height: 75,
     width: 300,
-    borderWidth: 2,
-    borderColor: 'black',
     marginTop: 50,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   buttonContent: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor: 'lightblue'
+    backgroundColor: '#4361ee',
+    borderWidth: 5,
+    borderColor: '#4361ee',
+    borderRadius: 10
   },
   buttonText:{
     fontSize: 25,
     fontWeight: 'bold',
     alignSelf: 'center',
+    color: '#FAF9F6'
   },
   smallIcon: {
     fontSize: 30,
     alignSelf: 'center',
-    marginLeft: 10
+    marginLeft: 10,
+    color: '#FAF9F6'
   }
 });
