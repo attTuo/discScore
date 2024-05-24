@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Pressable, StyleSheet, ScrollView } from 'react-native';
 import { Text, View } from '@/components/Themed';
-import { removeItem, getAllSavedRounds, clearAll, StorageResult } from '../storage';
+import { removeItem, getAllSavedRounds, clearAll, StorageResult, PlayerScore } from '../storage';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function TabRoundsScreen() {
@@ -33,7 +33,7 @@ export default function TabRoundsScreen() {
 
     <View style={styles.container}>
 
-			<View style={{flexDirection: 'row', paddingTop: 10, paddingHorizontal: 20,alignSelf: 'center', backgroundColor: '#FAF9F6'}}>
+			<View style={{flexDirection: 'row', paddingTop: 10, paddingHorizontal: 20,alignSelf: 'center', backgroundColor: '#FAF9F6', paddingBottom: 10}}>
 				<Text style={styles.title}>Saved Rounds</Text>
 
 				<Pressable
@@ -63,15 +63,14 @@ export default function TabRoundsScreen() {
 
 									<View style={styles.roundInfo}>
 
-										<View style={styles.infoColumn}>
-											
-											<Text style={styles.playerInfo}>{round.value.playerName}</Text>
-											<Text style={styles.playerScore}>Score: {round.value.score}</Text>
-										</View>
-				
-										<View style={styles.infoColumn}>
-													
-										</View>
+										{round.value.players.map( (player: PlayerScore, idx: number) => (
+
+											<View style={styles.playerInfo} key={idx}>
+												<Text style={styles.playerName}>{player.playerName}</Text>
+												<Text style={styles.playerScore}>Score: {player.score}</Text>
+											</View>
+										))}
+
 									</View>		
 			
 									<Pressable style={styles.removeButton}
@@ -88,9 +87,9 @@ export default function TabRoundsScreen() {
 						</ScrollView>
 					: <View style={styles.listItem}>
 							<View style={styles.flexRow}>
-								<Text style={styles.playerInfo}>Forest course</Text>
-								<Text style={styles.playerInfo}>Jack</Text>
-								<Text style={styles.playerInfo}>Score: 7</Text>
+								<Text style={styles.playerName}>Forest course</Text>
+								<Text style={styles.playerName}>Jack</Text>
+								<Text style={styles.playerName}>Score: 7</Text>
 								<Text>12.12.2024</Text>
 								<Text>12:15</Text>
 							</View>
@@ -118,7 +117,7 @@ export default function TabRoundsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-		backgroundColor: '#FAF9F6'
+		backgroundColor: '#FAF9F6',
 	},
 	title: {
 		fontSize: 35,
@@ -138,7 +137,8 @@ const styles = StyleSheet.create({
 		backgroundColor: '#4361ee'
 	},
 	scrollBox: {
-		padding: 20
+		paddingHorizontal: 20,
+		flexGrow: 1
 	},
 	listItem: {
 		flex: 1,
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
 		elevation: 5
 	},
 	upperInfo: {
-		paddingBottom: 5,
+		paddingBottom: 10,
 		backgroundColor: '#4361ee',
 		flexDirection: 'row'
 	},
@@ -168,22 +168,26 @@ const styles = StyleSheet.create({
 		backgroundColor: '#4361ee'
 	},
 	roundInfo: {
-		flex: 1, 
-		flexDirection: 'row',
-		backgroundColor: '#4361ee'
-	},
-	infoColumn: {
-		flex: 1,
 		flexDirection: 'column',
+		flexWrap: 'wrap',
 		backgroundColor: '#4361ee',
+		marginBottom: 10
 	},
 	playerInfo: {
+		flex: 1,
+		flexDirection: 'row',
+		backgroundColor: '#4361ee',
+		borderBottomWidth: 1,
+		borderColor: '#FAF9F6'
+	},
+	playerName: {
 		flex: 1,
 		fontSize: 24
 	},
 	playerScore: {
 		flex: 1,
-		fontSize: 16
+		fontSize: 16,
+		alignSelf: 'center'
 	},
 	removeButton: {
 		textAlign: 'center',
