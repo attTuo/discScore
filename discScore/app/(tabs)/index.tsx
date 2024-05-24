@@ -186,13 +186,9 @@ export default function TabIndexScreen() {
 
         : <View style={styles.container}>
 
-              
             <Text style={styles.title}>{selectedCourse}</Text>      
-            <Text style={{color: '#4361ee'}}>Group size: {groupSize.toString()}</Text>
+            <Text style={{color: '#4361ee', alignSelf: 'center'}}>Group size: {groupSize.toString()}</Text>
 
-            
-
-            
             <ScrollView style={styles.scrollBox}>
 
               {group.map((player: Player, idx: number) => (
@@ -264,7 +260,7 @@ export default function TabIndexScreen() {
                     
                   </View>
                   <View>
-                    <Pressable style={styles.scoreButton}
+                    <Pressable style={styles.saveScoreButton}
                       onPress={() => {
                         storeRound({
                           courseName: selectedCourse?.toString(),
@@ -293,8 +289,6 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#FAF9F6'
   },
   title: {
@@ -324,7 +318,6 @@ const styles = StyleSheet.create({
   },
   courseAdder: {
     backgroundColor: '#4cc9f0',
-    
     borderWidth: 1,
     borderRadius: 10,
     borderColor: '#4361ee',
@@ -373,7 +366,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   scrollBox: {
-    marginTop: 20
+    flex: 1,
+    marginTop: 20,
+    paddingHorizontal: 20
   },
   scoreCard: {
     flex: 1,
@@ -421,26 +416,36 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
-  },
-  buttonText: {
-    fontSize: 35,
-    fontWeight: 'bold',
-    alignSelf: 'center'
+    justifyContent: 'center',
+    marginVertical: 10
   },
   scoreButton: {
-    width: 60,
-    height: 60,
+    flex: 1,
     borderWidth: 2,
     borderColor: '#eee',
     textAlign: 'center',
-    margin: 5,
+    marginHorizontal: 5,
     borderRadius: 10
   },
+  buttonText: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    padding: 5,
+  },
   scoreInput: {
-    fontSize: 35,
+    fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: 'white'
+    color: 'white',
+    padding: 5,
+  },
+  saveScoreButton: {
+    borderWidth: 2,
+    borderColor: '#eee',
+    textAlign: 'center',
+    padding: 10,
+    borderRadius: 10,
+    alignSelf: 'flex-end'
   }
 });
