@@ -5,8 +5,12 @@ export interface RoundScore {
   courseName?: string,
   date: string,
   time: string,
-	playerName: string,
-	score: string
+	players: PlayerScore[]
+}
+
+export interface PlayerScore {
+  playerName: string,
+  score: string
 }
 
 export interface StorageResult {

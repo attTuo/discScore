@@ -2,7 +2,7 @@ import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native
 import React, { useState, useEffect } from 'react';
 import { Text } from '@/components/Themed';
 import {Picker} from '@react-native-picker/picker';
-import { storeRound, StorageResult, storeCourse, getAllCourses, getAllSavedRounds } from '../storage';
+import { storeRound, StorageResult, storeCourse, getAllCourses, getAllSavedRounds, RoundScore, PlayerScore } from '../storage';
 import {format} from 'date-fns';
 
 export default function TabIndexScreen() {
@@ -58,6 +58,29 @@ export default function TabIndexScreen() {
     }
     setGroup(players);
     setGroupSize(numberOfPlayers);
+  }
+
+  const handleRoundSave = (): void => {
+
+    const playerScores: PlayerScore[] = [];
+
+    group.map( (player: Player) => (
+      playerScores.push(
+        {
+          playerName: player.name,
+          score: player.score.toString()
+        }
+      )
+    ));
+
+    storeRound({
+      courseName: selectedCourse?.toString(),
+      date: `${format(new Date(),'dd.MM.y').toString()}`,
+      time: `${format(new Date(),'HH:mm').toString()}`,
+      players: playerScores
+    });
+
+    setGroupSize(0);
   }
 
   const countScore = (num: number, operation: string, player: Player): void => {
@@ -186,8 +209,20 @@ export default function TabIndexScreen() {
 
         : <View style={styles.container}>
 
-            <Text style={styles.title}>{selectedCourse}</Text>      
-            <Text style={{color: '#4361ee', alignSelf: 'center'}}>Group size: {groupSize.toString()}</Text>
+                 
+            <View style={styles.topInfo}>
+              <Text style={styles.title}>{selectedCourse}</Text> 
+              <Pressable 
+                style={styles.saveRoundButton}
+                onPress={() => {
+                  handleRoundSave();
+                  getAllSavedRounds();
+                }}
+              >
+                <Text style={styles.saveRoundButtonContent}>Save Round</Text>
+              </Pressable>
+            </View>
+            <Text style={{color: '#4361ee', marginLeft: 20}}>Group size: {groupSize.toString()}</Text>
 
             <ScrollView style={styles.scrollBox}>
 
@@ -259,23 +294,7 @@ export default function TabIndexScreen() {
                     </Pressable>
                     
                   </View>
-                  <View>
-                    <Pressable style={styles.saveScoreButton}
-                      onPress={() => {
-                        storeRound({
-                          courseName: selectedCourse?.toString(),
-                          date: `${format(new Date(),'dd.MM.y').toString()}`,
-                          time: `${format(new Date(),'HH:mm').toString()}`,
-                          playerName: player.name,
-                          score: player.score.toString()
-                        });
-                        getAllSavedRounds();
-                      }}
-                    >
-                      <Text> Save Score </Text>
-                    </Pressable>
-
-                  </View>
+                  
                 </View>
               ))}
             </ScrollView>
@@ -290,13 +309,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FAF9F6'
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    marginTop: 10,
-    color: '#4361ee'
   },
   courseInputs: {
     paddingHorizontal: 20,
@@ -365,6 +377,32 @@ const styles = StyleSheet.create({
     color: '#FAF9F6',
     textAlign: 'center',
   },
+
+  //Scorecard view
+  topInfo: {
+    flexDirection: 'row',
+    marginHorizontal: 20,
+  },
+  title: {
+    flex: 5,
+    fontSize: 30,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    marginTop: 10,
+    color: '#4361ee'
+  },
+  saveRoundButton: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 5,
+    marginTop: 10,
+    borderRadius: 10,
+    backgroundColor: '#4361ee',
+    elevation: 5,
+  },
+  saveRoundButtonContent: {
+    alignSelf: 'center'
+  },
   scrollBox: {
     flex: 1,
     marginTop: 20,
@@ -422,7 +460,7 @@ const styles = StyleSheet.create({
   scoreButton: {
     flex: 1,
     borderWidth: 2,
-    borderColor: '#eee',
+    borderColor: '#FAF9F6',
     textAlign: 'center',
     marginHorizontal: 5,
     borderRadius: 10
@@ -440,12 +478,4 @@ const styles = StyleSheet.create({
     color: 'white',
     padding: 5,
   },
-  saveScoreButton: {
-    borderWidth: 2,
-    borderColor: '#eee',
-    textAlign: 'center',
-    padding: 10,
-    borderRadius: 10,
-    alignSelf: 'flex-end'
-  }
 });
