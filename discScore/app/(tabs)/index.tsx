@@ -22,7 +22,7 @@ export default function TabIndexScreen() {
   const [selectedCourse, setSelectedCourse] = useState<string>('Unknown Course');
   const [courses, setCourses] = useState<string[] | undefined>([]);
   const [errorMsg, setErrorMsg] = useState<string>(''); 
-  const [newCourse, setNewCourse] = useState<string>('Add a new course');
+  const [newCourse, setNewCourse] = useState<string>('');
 
   const fetchData = async () => {
 
@@ -89,44 +89,50 @@ export default function TabIndexScreen() {
     <View style={styles.container}>
 
       { (groupSize == 0 || group.length < 1)
-        ? <View style={styles.container}>
+        ? <View>
+            <View style={styles.courseInputs}>
 
-            { (courses)
-              ? <View>
-                  <Picker
-                    selectedValue={selectedCourse}
-                    style={styles.coursePicker}
-                    onValueChange={(itemValue, itemIndex) =>
-                      setSelectedCourse(itemValue)
-                    }>
 
-                    {courses.map((course: string, idx : number) =>
-                      <Picker.Item label={`${course}`} value={course} key={idx} />
-                    )}
-                    
-                  </Picker>
+            
+              { (courses)
+                ? <View style={styles.pickerBox}>
+                    <Picker
+                      selectedValue={selectedCourse}
+                      style={styles.coursePicker}
+                      dropdownIconColor='#FAF9F6'
+                      dropdownIconRippleColor='#FAF9F6'
+                      onValueChange={(itemValue, itemIndex) =>
+                        setSelectedCourse(itemValue)
+                      }>
 
-                </View>
-              :<></>
-            }
+                      {courses.map((course: string, idx : number) =>
+                        <Picker.Item label={`${course}`} value={course} key={idx} style={styles.pickerListItem} />
+                      )}
+                      
+                    </Picker>
 
-            <View style={styles.courseAdder}>
-              <TextInput
-                selectTextOnFocus={true}
-                defaultValue='+'
-                value={newCourse}
-                style={styles.nameInput}
-                onChangeText={newName => setNewCourse(newName)}
-                onSubmitEditing={() => {
-                  storeCourse(newCourse);
-                  setNewCourse('Add a new course');
-                  fetchData();
-                }}
-              />
-              
-            </View> 
+                  </View>
+                :<></>
+              }
 
-            <Text>Choose the group size</Text>
+              <View style={styles.courseAdder}>
+                <TextInput
+                  selectTextOnFocus={true}
+                  placeholderTextColor= '#FAF9F6'
+                  placeholder='Add a new course...'
+                  value={newCourse}
+                  style={styles.courseAdderInput}
+                  onChangeText={newName => setNewCourse(newName)}
+                  onSubmitEditing={() => {
+                    storeCourse(newCourse);
+                    setNewCourse('Add a new course');
+                    fetchData();
+                  }}
+                />
+                
+              </View> 
+
+            </View>
 
             <View style={styles.boxholder}>
 
@@ -181,8 +187,8 @@ export default function TabIndexScreen() {
         : <View style={styles.container}>
 
               
-            <Text>Course: {selectedCourse}</Text>      
-            <Text>Group size: {groupSize.toString()}</Text>
+            <Text style={styles.title}>{selectedCourse}</Text>      
+            <Text style={{color: '#4361ee'}}>Group size: {groupSize.toString()}</Text>
 
             
 
@@ -226,7 +232,7 @@ export default function TabIndexScreen() {
                         selectTextOnFocus={true}
                         inputMode='numeric'
                         value={player.scoreToAdd}
-                        placeholderTextColor='#eee'
+                        placeholderTextColor='#caf0f8'
                         keyboardType='number-pad'
                         textAlign='center'
                         onChangeText={(newScore) => {
@@ -289,19 +295,46 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#FAF9F6'
   },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
     alignSelf: 'center',
-    marginTop: 15,
-    marginBottom: 20
+    marginTop: 10,
+    color: '#4361ee'
   },
-  separator: {
-    marginTop: 30,
-    marginBottom: 10,
-    height: 1,
-    width: '80%',
+  courseInputs: {
+    paddingHorizontal: 20,
+  },
+  pickerBox: {
+    backgroundColor: '#4361ee',
+    borderWidth: 5, 
+    borderColor: '#4361ee', 
+    borderRadius: 10,
+    marginTop: 25,
+    elevation: 5
+  },
+  coursePicker: {
+    backgroundColor: '#4361ee',
+    color: '#FAF9F6',
+  },
+  pickerListItem: {
+    color: '#4361ee'
+  },
+  courseAdder: {
+    backgroundColor: '#4cc9f0',
+    
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: '#4361ee',
+    elevation: 5
+  },
+  courseAdderInput: {
+    fontSize: 20,
+    paddingLeft: 20,
+    paddingVertical: 15,
+    color: '#FAF9F6'
   },
   boxholder: {
     flex: 1,
@@ -317,35 +350,27 @@ const styles = StyleSheet.create({
     height: 135,
     padding: 10,
     margin: 20,
-    borderColor: 'grey',
+    borderColor: '#4361ee',
     borderWidth: 5,
     alignContent: 'center',
-    borderRadius: 10
+    borderRadius: 10,
+    backgroundColor: '#4361ee',
+    elevation: 5
   },
   largeNumber: {
     textAlign: 'center',
     fontSize: 70,
     fontWeight: 'bold',
+    color: '#FAF9F6',
   },
   inputStyle: {
     height: 105,
-    borderColor: 'grey',
+    borderColor: '#FAF9F6',
     borderWidth: 5,
+    borderRadius: 10,
     fontSize: 70,
-    color: 'white',
+    color: '#FAF9F6',
     textAlign: 'center',
-    borderRadius: 10
-  },
-  coursePicker: {
-    backgroundColor: 'red',
-    color: 'blue',
-    height: 50,
-    width: 300,
-    marginTop: 20
-  },
-  courseAdder: {
-    borderWidth: 2,
-    borderColor: 'blue'
   },
   scrollBox: {
     marginTop: 20
@@ -354,12 +379,12 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: '#eee',
+    borderWidth: 5,
+    borderColor: '#4361ee',
     padding: 7,
     marginBottom: 20,
     borderRadius: 10,
-    backgroundColor: 'green'
+    backgroundColor: '#4361ee'
   },
   playerInfo: {
     flex: 1,
@@ -371,13 +396,13 @@ const styles = StyleSheet.create({
   playerName: {
     flex: 3,
     borderWidth: 2,
-    borderColor: '#eee',
+    borderColor: '#FAF9F6',
     margin: 5,
     borderRadius: 10
   },
   nameInput: {
     fontSize: 30,
-    color:'white',
+    color:'#FAF9F6',
     marginLeft: 5,
     paddingBottom: 5
   },
@@ -385,11 +410,12 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 50,
     borderWidth: 2,
-    borderColor: '#eee',
+    borderColor: '#FAF9F6',
+    color: '#4361ee',
     textAlign: 'center',
     margin: 5,
     borderRadius: 10,
-    backgroundColor: 'green'
+    backgroundColor: '#FAF9F6'
   },
   scoreCardContent: {
     flex: 1,

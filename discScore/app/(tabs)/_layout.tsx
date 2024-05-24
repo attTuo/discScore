@@ -1,7 +1,7 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -20,13 +20,19 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: '#4361ee',
+        tabBarInactiveTintColor: '#FAF9F6',
         headerShown: useClientOnlyValue(false, true),
+        tabBarInactiveBackgroundColor: '#4361ee',
+        tabBarActiveBackgroundColor: '#FAF9F6'
       }}>
         <Tabs.Screen
         name="roundList"
           options={{
             title: 'Saved Rounds',
+            headerTintColor: '#FAF9F6',
+            headerStyle: styles.bgColor,
+            tabBarHideOnKeyboard: true,
             tabBarIcon: ({ color }) => <TabBarIcon name="list-alt" color={color} />,
           }}
         />
@@ -34,6 +40,10 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Scorecard',
+          headerTintColor: '#FAF9F6',
+          headerStyle: styles.bgColor,
+          tabBarHideOnKeyboard: true,
+        
           tabBarIcon: ({ color }) => <TabBarIcon name="users" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -42,7 +52,7 @@ export default function TabLayout() {
                   <FontAwesome
                     name="info-circle"
                     size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
+                    color='#FAF9F6'
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
@@ -55,9 +65,18 @@ export default function TabLayout() {
         name="roulette"
         options={{
           title: 'Roulette',
+          headerTintColor: '#FAF9F6',
+          headerStyle: styles.bgColor,
+          tabBarHideOnKeyboard: true,
           tabBarIcon: ({ color }) => <TabBarIcon name="dashboard" color={color} />,
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  bgColor: {
+    backgroundColor: '#4361ee'
+  },
+});
