@@ -14,7 +14,7 @@ export default function TabRoundsScreen() {
     try {
 
 			let fetchResult: StorageResult[] | undefined = await getAllSavedRounds();
-			fetchResult !== undefined ? setData(fetchResult) : setErrorMsg('Problem fetching data');
+			fetchResult !== undefined ? setData(fetchResult.reverse()) : setErrorMsg('Problem fetching data');
 
     } catch (error) {
       console.log(error)
