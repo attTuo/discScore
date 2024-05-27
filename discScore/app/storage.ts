@@ -22,12 +22,10 @@ export interface StorageResult {
 export const storeCourse = async (value: string) => {
   
   try {
-
     await AsyncStorage.setItem(`${value}`, 'course');
-    console.log('Course added')
-
+    console.log('Course added');
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
@@ -48,10 +46,11 @@ export const getAllCourses = async () => {
         : void(0) 
       ))
     }
+    console.log(courses);
 		return courses;
 
 	} catch (error) {
-		console.error(error)
+		console.error(error);
 	}
 }
 
@@ -63,7 +62,7 @@ export const storeRound = async (value: RoundScore) => {
     console.log('Item added');
 
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
@@ -74,35 +73,34 @@ export const getData = async () => {
     return jsonValue != null ? JSON.parse(jsonValue) : null;
 
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
 export const getAllSavedRounds = async () => {
 
-  let test: StorageResult[] = [];
+  let rounds: StorageResult[] = [];
 
 	try {
 		const keys = await AsyncStorage.getAllKeys();
 		const result = await AsyncStorage.multiGet(keys);
     
     if (result) {
-      result.map((item: KeyValuePair, idx: number) => (
 
-        (item[1] !== null && item[1] !== 'course') 
+      result.map( (item: KeyValuePair) => (
 
-        ? test.push({
+        (item[1] !== null && item[1] !== 'course')
+        ? rounds.push({
             key: item[0],
             value: JSON.parse(item[1])
           })
         : void(0)
       ))
     }
-    console.log(test)
-		return test;
+		return rounds;
 
 	} catch (error) {
-		console.error(error)
+		console.error(error);
 	}
 }
 
@@ -113,16 +111,15 @@ export const removeItem = async (key: string) => {
   } catch(error) {
     console.log(error)
   }
-
   console.log('Item removed.')
 }
 
 export const clearAll = async () => {
+  
   try {
-    await AsyncStorage.clear()
+    await AsyncStorage.clear();
   } catch(error) {
-    console.log(error)
+    console.log(error);
   }
-
-  console.log('Cleared all AsyncStorage data')
+  console.log('Cleared all AsyncStorage data');
 }

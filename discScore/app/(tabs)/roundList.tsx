@@ -10,13 +10,11 @@ export default function TabRoundsScreen() {
   const [errorMsg, setErrorMsg] = useState<string>(''); 
 
   const fetchSavedRounds = async () => {
-		
-		let test: StorageResult[] | undefined = [];
-		
+
     try {
 
-			// Write this again
-			await getAllSavedRounds() !== undefined ? setData(await getAllSavedRounds()) : setErrorMsg('Problem fetching data')
+			let fetchResult: StorageResult[] | undefined = await getAllSavedRounds();
+			fetchResult !== undefined ? setData(fetchResult) : setErrorMsg('Problem fetching data');
 
     } catch (error) {
       console.log(error)
