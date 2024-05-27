@@ -26,13 +26,13 @@ export default function TabIndexScreen() {
 
   const fetchData = async () => {
 
-		let test: StorageResult[] | undefined = [];
     try {
-		
-			await getAllCourses() !== undefined ? setCourses(await getAllCourses()) : setErrorMsg('Problem fetching data')
+
+      let fetchResult: string[] | undefined = await getAllCourses();
+			fetchResult !== undefined ? setCourses(fetchResult) : setErrorMsg('Problem fetching data');
 
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
