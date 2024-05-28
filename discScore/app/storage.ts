@@ -46,7 +46,6 @@ export const getAllCourses = async () => {
         : void(0) 
       ))
     }
-    console.log(courses);
 		return courses;
 
 	} catch (error) {
