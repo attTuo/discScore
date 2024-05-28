@@ -1,8 +1,8 @@
-import { Pressable, ScrollView, StyleSheet, TextInput, View, Modal } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, TextInput, View, Modal, Alert } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Text } from '@/components/Themed';
 import {Picker} from '@react-native-picker/picker';
-import { storeRound, StorageResult, storeCourse, getAllCourses, getAllSavedRounds, RoundScore, PlayerScore } from '../storage';
+import { storeRound, StorageResult, storeCourse, getAllCourses, getAllSavedRounds, RoundScore, PlayerScore, removeRound, removeCourse } from '../storage';
 import {format} from 'date-fns';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
@@ -20,11 +20,12 @@ export default function TabIndexScreen() {
   const [customGroupSize, setCustomGroupSize] = useState<number>(0);
   const [scoreToAdd, setScoreToAdd] = useState<number>(0);
   const [group, setGroup] = useState<Player[]>([]);
-  const [selectedCourse, setSelectedCourse] = useState<string>('Unknown Course');
+  const [selectedCourse, setSelectedCourse] = useState<string>('Select a course...');
   const [courses, setCourses] = useState<string[] | undefined>([]);
   const [errorMsg, setErrorMsg] = useState<string>(''); 
   const [newCourse, setNewCourse] = useState<string>('');
-  const [modalVisible, setModalVisible] = useState(false);
+  const [addModalVisible, setAddModalVisible] = useState(false);
+  const [courseModalVisible, setCourseModalVisible] = useState(false);
 
   const fetchData = async () => {
 
@@ -109,31 +110,90 @@ export default function TabIndexScreen() {
     */
       setScoreToAdd(newScore);
   }
-  
+
+  const createAlert = (courseName : string) => {
+
+    Alert.alert('Delete', `Do you want to delete course ${courseName}`, [
+      {
+        text: 'Delete', 
+        onPress: () => {
+          removeCourse(courseName);
+          fetchData();
+        }
+      },
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+    ]);
+  }
+
   return (
+
     <View style={styles.container}>
 
       { (groupSize == 0 || group.length < 1)
         ? <View>
+
             <View style={styles.courseInputs}>
 
+            <Pressable
+              onPress={() => setCourseModalVisible(true)}
+              style={styles.pickerBox}
+            >
+              <Text>{selectedCourse}</Text>
+            </Pressable>
+
               { (courses)
-                ? <View style={styles.pickerBox}>
-                    <Picker
-                      selectedValue={selectedCourse}
-                      style={styles.coursePicker}
-                      dropdownIconColor='#FAF9F6'
-                      dropdownIconRippleColor='#FAF9F6'
-                      onValueChange={(itemValue, itemIndex) =>
-                        setSelectedCourse(itemValue)
-                      }>
+                ? <View>
 
-                      {courses.map((course: string, idx : number) =>
-                        <Picker.Item label={`${course}`} value={course} key={idx} style={styles.pickerListItem} />
-                      )}
-                      
-                    </Picker>
+                    <Modal
+                      animationType="slide"
+                      transparent={true}
+                      visible={courseModalVisible}
+                      onRequestClose={() => {
+                        setCourseModalVisible(!courseModalVisible);
+                      }}
+                    >
+                      <View style={styles.centeredView}>
 
+                        <View style={styles.modalView}>
+
+                          <Pressable
+                            style={styles.closeModalButton}
+                            onPress={() => setCourseModalVisible(!courseModalVisible)}
+                          >
+                            <FontAwesome size={20} name='close' style={{color: '#4361ee'}}/>
+                          </Pressable>
+
+                          <ScrollView style={styles.modalScrollView}>
+
+                            {courses.map((course: string, idx : number) =>
+                              <View style={styles.pickerListItem}  >
+                                <Pressable 
+                                  style={styles.pickerListItem} 
+                                  key={idx} 
+                                  onPress={() => {
+                                    setSelectedCourse(course);
+                                    setCourseModalVisible(!courseModalVisible);
+                                  }}
+                                >
+                                  <Text style={styles.courseListName}>{course}</Text>
+
+                                  <Pressable
+                                    onPress={() => createAlert(course)}
+                                    style={styles.deleteCourse}
+                                  >
+                                    <FontAwesome size={20} name='close' style={{color: 'white', alignSelf: 'center', flex: 1}}/>
+                                  </Pressable>
+                                </Pressable>
+                              </View>
+                            )}
+                          </ScrollView>
+                        </View>
+                      </View>
+                    </Modal>
                   </View>
                 :<></>
               }
@@ -142,9 +202,9 @@ export default function TabIndexScreen() {
                 <Modal
                   animationType="slide"
                   transparent={true}
-                  visible={modalVisible}
+                  visible={addModalVisible}
                   onRequestClose={() => {
-                    setModalVisible(!modalVisible);
+                    setAddModalVisible(!addModalVisible);
                   }}
                 >
                   <View style={styles.centeredView}>
@@ -153,7 +213,8 @@ export default function TabIndexScreen() {
 
                       <Pressable
                         style={styles.closeModalButton}
-                        onPress={() => setModalVisible(!modalVisible)}>
+                        onPress={() => setAddModalVisible(!addModalVisible)}
+                      >
                         <FontAwesome size={20} name='close' style={{color: '#4361ee'}}/>
                       </Pressable>
                     
@@ -183,7 +244,7 @@ export default function TabIndexScreen() {
 
                 <Pressable
                   style={styles.modalButton}
-                  onPress={() => setModalVisible(true)}>
+                  onPress={() => setAddModalVisible(true)}>
                   <FontAwesome size={30} name='plus' style={{color: '#FAF9F6', alignSelf: 'center'}}/>
                 </Pressable>
               
@@ -356,14 +417,35 @@ const styles = StyleSheet.create({
     borderColor: '#4361ee', 
     borderRadius: 10,
     marginTop: 25,
-    elevation: 5
+    elevation: 5,
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 10
   },
   coursePicker: {
     backgroundColor: '#4361ee',
     color: '#FAF9F6',
   },
   pickerListItem: {
-    color: '#4361ee'
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 2
+  },
+  courseListName: {
+    flex: 7,
+    fontSize: 20,
+    alignSelf: 'flex-start',
+    borderBottomWidth: 1,
+    borderColor: '#FAF9F6'
+  },
+  deleteCourse: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#FAF9F6',
+    alignItems: 'center',
+    justifyContent: 'center',
+
   },
 
   // Modal
@@ -393,6 +475,7 @@ const styles = StyleSheet.create({
     borderWidth:2,
     borderColor: '#4cc9f0',
     elevation: 5,
+    maxHeight: '80%'
   },
   closeModalButton: {
     alignSelf: 'flex-end',
@@ -401,7 +484,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth:2,
     borderColor: '#4cc9f0',
-    elevation: 5
+    elevation: 5,
   },
   modalText: {
     fontSize: 30,
@@ -458,6 +541,9 @@ const styles = StyleSheet.create({
     fontSize: 70,
     color: '#FAF9F6',
     textAlign: 'center',
+  },
+  modalScrollView: {
+    marginTop: 40
   },
 
   //Scorecard view

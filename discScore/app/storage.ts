@@ -103,14 +103,24 @@ export const getAllSavedRounds = async () => {
 	}
 }
 
-export const removeItem = async (key: string) => {
+export const removeRound = async (key: string) => {
+
+  try {
+    await AsyncStorage.removeItem(`${key}`)
+    console.log('Round removed.')
+  } catch(error) {
+    console.log(error)
+  }
+}
+
+export const removeCourse = async (key: string) => {
 
   try {
     await AsyncStorage.removeItem(`${key}`)
   } catch(error) {
     console.log(error)
   }
-  console.log('Item removed.')
+  console.log('Course removed.')
 }
 
 export const clearAll = async () => {
