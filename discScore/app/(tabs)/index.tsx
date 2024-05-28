@@ -1,9 +1,10 @@
-import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, TextInput, View, Modal } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Text } from '@/components/Themed';
 import {Picker} from '@react-native-picker/picker';
 import { storeRound, StorageResult, storeCourse, getAllCourses, getAllSavedRounds, RoundScore, PlayerScore } from '../storage';
 import {format} from 'date-fns';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function TabIndexScreen() {
 
@@ -23,6 +24,7 @@ export default function TabIndexScreen() {
   const [courses, setCourses] = useState<string[] | undefined>([]);
   const [errorMsg, setErrorMsg] = useState<string>(''); 
   const [newCourse, setNewCourse] = useState<string>('');
+  const [modalVisible, setModalVisible] = useState(false);
 
   const fetchData = async () => {
 
@@ -39,7 +41,7 @@ export default function TabIndexScreen() {
   useEffect(() => {
 
     fetchData()
-    
+
   },[]);
 
   const intializePlayers = (numberOfPlayers: number): void => {
@@ -115,8 +117,6 @@ export default function TabIndexScreen() {
         ? <View>
             <View style={styles.courseInputs}>
 
-
-            
               { (courses)
                 ? <View style={styles.pickerBox}>
                     <Picker
@@ -138,22 +138,55 @@ export default function TabIndexScreen() {
                 :<></>
               }
 
-              <View style={styles.courseAdder}>
-                <TextInput
-                  selectTextOnFocus={true}
-                  placeholderTextColor= '#FAF9F6'
-                  placeholder='Add a new course...'
-                  value={newCourse}
-                  style={styles.courseAdderInput}
-                  onChangeText={newName => setNewCourse(newName)}
-                  onSubmitEditing={() => {
-                    storeCourse(newCourse);
-                    setNewCourse('Add a new course');
-                    fetchData();
+              
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                    setModalVisible(!modalVisible);
                   }}
-                />
-                
-              </View> 
+                >
+                  <View style={styles.centeredView}>
+
+                    <View style={styles.modalView}>
+
+                      <Pressable
+                        style={styles.closeModalButton}
+                        onPress={() => setModalVisible(!modalVisible)}>
+                        <FontAwesome size={20} name='close' style={{color: '#4361ee'}}/>
+                      </Pressable>
+                    
+                      <Text style={styles.modalText}>Add a new course:</Text>
+
+                      <View style={styles.courseAdder}>
+                        <TextInput
+                          selectTextOnFocus={true}
+                          placeholderTextColor= '#4361ee'
+                          autoCorrect={false}
+                          placeholder='Forest Course Am, Etc. ...'
+                          selectionColor='#4361ee'
+                          value={newCourse}
+                          style={styles.courseAdderInput}
+                          onChangeText={newName => setNewCourse(newName)}
+                          onSubmitEditing={() => {
+                            storeCourse(newCourse);
+                            setNewCourse('');
+                            fetchData();
+                          }}
+                        />
+                      </View>
+
+                    </View>
+                  </View>
+                </Modal>
+
+                <Pressable
+                  style={styles.modalButton}
+                  onPress={() => setModalVisible(true)}>
+                  <FontAwesome size={30} name='plus' style={{color: '#FAF9F6', alignSelf: 'center'}}/>
+                </Pressable>
+              
 
             </View>
 
@@ -312,8 +345,12 @@ const styles = StyleSheet.create({
   },
   courseInputs: {
     paddingHorizontal: 20,
+    flexDirection: 'row',
+    marginBottom: 35
   },
   pickerBox: {
+    flex: 6,
+    height: 65,
     backgroundColor: '#4361ee',
     borderWidth: 5, 
     borderColor: '#4361ee', 
@@ -328,18 +365,63 @@ const styles = StyleSheet.create({
   pickerListItem: {
     color: '#4361ee'
   },
-  courseAdder: {
-    backgroundColor: '#4cc9f0',
-    borderWidth: 1,
+
+  // Modal
+  modalButton: {
+    flex: 1,
+    height: 65,
     borderRadius: 10,
-    borderColor: '#4361ee',
+    padding: 10,
+    elevation: 5,
+    backgroundColor: '#4361ee',
+    marginLeft: 10,
+    justifyContent: 'center',
+    alignSelf: 'flex-end'
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    width: '90%',
+    backgroundColor: '#4361ee',
+    borderRadius: 10,
+    padding: 10,
+    alignItems: 'center',
+    borderWidth:2,
+    borderColor: '#4cc9f0',
+    elevation: 5,
+  },
+  closeModalButton: {
+    alignSelf: 'flex-end',
+    backgroundColor: '#FAF9F6',
+    padding: 7,
+    borderRadius: 10,
+    borderWidth:2,
+    borderColor: '#4cc9f0',
+    elevation: 5
+  },
+  modalText: {
+    fontSize: 30,
+    marginBottom: 15,
+    color: '#FAF9F6',
+    fontWeight: 'bold',
+  },
+  courseAdder: {
+    backgroundColor: '#FAF9F6',
+    borderWidth: 2,
+    borderRadius: 10,
+    width: '100%',
+    borderColor: '#4cc9f0',
     elevation: 5
   },
   courseAdderInput: {
     fontSize: 20,
     paddingLeft: 20,
     paddingVertical: 15,
-    color: '#FAF9F6'
+    color: '#4361ee'
   },
   boxholder: {
     flex: 1,
