@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Pressable, StyleSheet, ScrollView } from 'react-native';
 import { Text, View } from '@/components/Themed';
-import { removeItem, getAllSavedRounds, clearAll, StorageResult, PlayerScore } from '../storage';
+import { removeRound, getAllSavedRounds, clearAll, StorageResult, PlayerScore } from '../storage';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function TabRoundsScreen() {
@@ -74,7 +74,7 @@ export default function TabRoundsScreen() {
 									<Pressable style={styles.removeButton}
 										onPress={() => {
 											data.slice(idx - 1);
-											removeItem(data[idx].key);
+											removeRound(data[idx].key);
 											fetchSavedRounds();
 										}}
 									>
