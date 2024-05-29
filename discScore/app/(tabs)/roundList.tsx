@@ -52,11 +52,10 @@ export default function TabRoundsScreen() {
 									<View style={styles.upperInfo}>
 										<Text style={styles.courseName}>{round.value.courseName}</Text>
 
-										<View style={styles.dateTimeStyle}>
-											<Text style={styles.dateTimeStyle}>{round.value.date} </Text>
-											<Text style={styles.dateTimeStyle}>{round.value.time}</Text>
+										<View style={styles.dateTimeInfo}>
+											<Text style={styles.dateTimeText}>{round.value.date}</Text>
+											<Text style={styles.dateTimeText}>{round.value.time}</Text>
 										</View>
-										
 									</View>
 
 									<View style={styles.roundInfo}>
@@ -152,18 +151,25 @@ const styles = StyleSheet.create({
 	upperInfo: {
 		paddingBottom: 10,
 		backgroundColor: '#4361ee',
-		flexDirection: 'row'
+		flexDirection: 'row',
+		marginBottom: 10
 	},
 	courseName:{
+		flex: 5,
 		fontSize: 28,
 		fontWeight: 'bold',
 		textDecorationLine: 'underline',
 	},
-	dateTimeStyle: {
+	dateTimeInfo: {
+		flex: 2,
+		flexDirection: 'column',
 		fontSize: 14,
+		backgroundColor: '#4361ee',
+		justifyContent: 'flex-start'
+	},
+	dateTimeText: {
 		alignSelf: 'flex-end',
-		flex: 1,
-		backgroundColor: '#4361ee'
+		
 	},
 	roundInfo: {
 		flexDirection: 'column',
