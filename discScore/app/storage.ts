@@ -1,24 +1,49 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyValuePair } from '@react-native-async-storage/async-storage/lib/typescript/types';
 
+// Roulette arrays
+export const shotArray: string[] = [
+  'Backhand',
+  'Forehand',
+];
+export const shapeArray: string[] = [
+  'Hyzer',
+  'Anhyzer',
+  'Roller',
+  'Flat',
+  'Any shape'
+];
+export const discArray: string[] = [
+  'a putter',
+  'a midrange',
+  'a fairway driver',
+  'a distance driver',
+  'the most UNDERSTABLE disc in your bag',
+  'the most OVERSTABLE disc in your bag',
+  'any disc, but with your NON-DOMINANT hand',
+  'any disc',
+  'a mini (marker disc)',
+  'any disc, but with the disc UPSIDE DOWN',
+  'a disc decided by the previous player'
+];
+
+// Storage and player interfaces
 export interface RoundScore {
   courseName?: string,
   date: string,
   time: string,
 	players: PlayerScore[]
 }
-
 export interface PlayerScore {
   playerName: string,
   score: string
 }
-
 export interface StorageResult {
   key: string,
   value: RoundScore
 }
-  
 
+// Storage functions
 export const storeCourse = async (value: string) => {
   
   try {
