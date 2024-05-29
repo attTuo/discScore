@@ -167,13 +167,15 @@ export default function TabIndexScreen() {
                             <FontAwesome size={20} name='close' style={{color: '#4361ee'}}/>
                           </Pressable>
 
+
+                          <Text style={styles.modalText}>Courses:</Text>
+
                           <ScrollView style={styles.modalScrollView}>
 
                             {courses.map((course: string, idx : number) =>
-                              <View style={styles.pickerListItem}  >
+                              <View style={styles.courseListItem} key={idx}>
                                 <Pressable 
-                                  style={styles.pickerListItem} 
-                                  key={idx} 
+                                  style={styles.courseListItemInfo} 
                                   onPress={() => {
                                     setSelectedCourse(course);
                                     setCourseModalVisible(!courseModalVisible);
@@ -185,7 +187,7 @@ export default function TabIndexScreen() {
                                     onPress={() => createAlert(course)}
                                     style={styles.deleteCourse}
                                   >
-                                    <FontAwesome size={20} name='close' style={{color: 'white', alignSelf: 'center', flex: 1}}/>
+                                    <FontAwesome size={20} name='trash' style={{color: '#FAF9F6', alignSelf: 'center'}}/>
                                   </Pressable>
                                 </Pressable>
                               </View>
@@ -250,6 +252,8 @@ export default function TabIndexScreen() {
               
 
             </View>
+
+            <Text style={{color: '#4361ee', alignSelf: 'center'}}>Select the number of players:</Text>
 
             <View style={styles.boxholder}>
 
@@ -407,7 +411,7 @@ const styles = StyleSheet.create({
   courseInputs: {
     paddingHorizontal: 20,
     flexDirection: 'row',
-    marginBottom: 35
+    marginBottom: 25
   },
   pickerBox: {
     flex: 6,
@@ -427,25 +431,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#4361ee',
     color: '#FAF9F6',
   },
-  pickerListItem: {
+  courseListItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 2
+    marginBottom: 10,
+    padding: 5,
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: '#FAF9F6'
   },
   courseListName: {
     flex: 7,
     fontSize: 20,
     alignSelf: 'flex-start',
-    borderBottomWidth: 1,
-    borderColor: '#FAF9F6'
+  },
+  courseListItemInfo: {
+    flexDirection: 'row',
   },
   deleteCourse: {
     flex: 1,
-    borderWidth: 1,
+    borderLeftWidth: 1,
     borderColor: '#FAF9F6',
-    alignItems: 'center',
     justifyContent: 'center',
-
+    flexDirection: 'column',
+    marginLeft: 10
   },
 
   // Modal
@@ -506,6 +515,11 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     color: '#4361ee'
   },
+  modalScrollView: {
+    marginTop: 10
+  },
+
+  // Starting view
   boxholder: {
     flex: 1,
     alignItems: 'center',
@@ -541,9 +555,6 @@ const styles = StyleSheet.create({
     fontSize: 70,
     color: '#FAF9F6',
     textAlign: 'center',
-  },
-  modalScrollView: {
-    marginTop: 40
   },
 
   //Scorecard view
