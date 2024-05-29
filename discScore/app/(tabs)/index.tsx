@@ -113,7 +113,7 @@ export default function TabIndexScreen() {
 
   const createAlert = (courseName : string) => {
 
-    Alert.alert('Delete', `Do you want to delete course ${courseName}`, [
+    Alert.alert('Delete course', `Are you sure you want to delete course: ${courseName} ?`, [
       {
         text: 'Delete', 
         onPress: () => {
