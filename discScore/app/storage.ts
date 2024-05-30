@@ -27,6 +27,22 @@ export const discArray: string[] = [
   'a disc decided by the previous player'
 ];
 
+export const monthNames: string[] = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+];
+
+
 // Storage and player interfaces
 export interface RoundScore {
   courseName?: string,
