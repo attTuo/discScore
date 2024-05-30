@@ -30,6 +30,7 @@ export default function TabLayout() {
         name="roundList"
           options={{
             title: 'Saved Rounds',
+            headerTitleStyle: {color: '#4361ee'},
             headerTintColor: '#FAF9F6',
             headerStyle: styles.bgColor,
             tabBarHideOnKeyboard: true,
@@ -40,6 +41,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Scorecard',
+          headerTitleStyle: {color: '#4361ee'},
           headerTintColor: '#FAF9F6',
           headerStyle: styles.bgColor,
           tabBarHideOnKeyboard: true,
@@ -50,6 +52,7 @@ export default function TabLayout() {
         name="roulette"
         options={{
           title: 'Roulette',
+          headerTitleStyle: {color: '#4361ee'},
           headerTintColor: '#FAF9F6',
           headerStyle: styles.bgColor,
           tabBarHideOnKeyboard: true,
@@ -62,6 +65,7 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   bgColor: {
-    backgroundColor: '#4361ee'
+    backgroundColor: '#4361ee',
+    height: 70,
   },
 });

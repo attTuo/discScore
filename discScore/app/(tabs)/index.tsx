@@ -1,7 +1,6 @@
 import { Pressable, ScrollView, StyleSheet, TextInput, View, Modal, Alert } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Text } from '@/components/Themed';
-import {Picker} from '@react-native-picker/picker';
 import { storeRound, StorageResult, storeCourse, getAllCourses, getAllSavedRounds, RoundScore, PlayerScore, removeRound, removeCourse } from '../storage';
 import {format} from 'date-fns';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -123,7 +122,6 @@ export default function TabIndexScreen() {
       },
       {
         text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
     ]);
@@ -172,7 +170,7 @@ export default function TabIndexScreen() {
 
                           <ScrollView style={styles.modalScrollView}>
 
-                            {courses.map((course: string, idx : number) =>
+                            {courses.map((course: string, idx : number) => (
                               <View style={styles.courseListItem} key={idx}>
                                 <Pressable 
                                   style={styles.courseListItemInfo} 
@@ -191,7 +189,7 @@ export default function TabIndexScreen() {
                                   </Pressable>
                                 </Pressable>
                               </View>
-                            )}
+                            ))}
                           </ScrollView>
                         </View>
                       </View>
@@ -406,7 +404,8 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: '#FAF9F6'
+    backgroundColor: '#FAF9F6',
+    paddingTop: 10
   },
   courseInputs: {
     paddingHorizontal: 20,
