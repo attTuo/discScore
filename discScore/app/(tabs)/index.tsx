@@ -131,7 +131,7 @@ export default function TabIndexScreen() {
 
     <View style={styles.container}>
 
-      { (groupSize == 0 || group.length < 1)
+      { (groupSize == 0 || group.length < 1 || selectedCourse === 'Select a course...')
         ? <View>
 
             <View style={styles.courseInputs}>
