@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Text, View } from '@/components/Themed';
 import { shotArray, shapeArray, discArray } from '../storage';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Pressable, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View } from '@/components/Themed';
 
 export default function TabRouletteScreen() {
 
