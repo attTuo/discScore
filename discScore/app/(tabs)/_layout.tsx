@@ -1,11 +1,9 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable, StyleSheet } from 'react-native';
-
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import { useColorScheme } from '@/components/useColorScheme';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { StyleSheet } from 'react-native';
+import { Tabs } from 'expo-router';
+import React from 'react';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
@@ -29,7 +27,7 @@ export default function TabLayout() {
         <Tabs.Screen
         name="roundList"
           options={{
-            title: 'Saved Rounds',
+            title: 'Rounds',
             headerTitleStyle: {color: '#4361ee'},
             headerTintColor: '#FAF9F6',
             headerStyle: styles.bgColor,

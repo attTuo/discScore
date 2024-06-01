@@ -1,5 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyValuePair } from '@react-native-async-storage/async-storage/lib/typescript/types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Roulette arrays
 export const shotArray: string[] = [
@@ -27,22 +27,6 @@ export const discArray: string[] = [
   'a disc decided by the previous player'
 ];
 
-export const monthNames: string[] = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-];
-
-
 // Storage and player interfaces
 export interface RoundScore {
   courseName?: string,
@@ -57,6 +41,12 @@ export interface PlayerScore {
 export interface StorageResult {
   key: string,
   value: RoundScore
+}
+export interface Player {
+  name: string,
+  score: number,
+  id: number,
+  scoreToAdd: string
 }
 
 // Storage functions
@@ -98,7 +88,7 @@ export const storeRound = async (value: RoundScore) => {
   
   try {
     const jsonValue = JSON.stringify(value);
-    await AsyncStorage.setItem(`${value.date}-${value.time}`, jsonValue);
+    await AsyncStorage.setItem(`${value.date}`, jsonValue);
     console.log('Item added');
 
   } catch (error) {

@@ -1,18 +1,10 @@
+import { storeRound, storeCourse, getAllCourses, getAllSavedRounds, PlayerScore, removeCourse, Player } from '../storage';
 import { Pressable, ScrollView, StyleSheet, TextInput, View, Modal, Alert } from 'react-native';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import React, { useState, useEffect } from 'react';
 import { Text } from '@/components/Themed';
-import { storeRound, StorageResult, storeCourse, getAllCourses, getAllSavedRounds, RoundScore, PlayerScore, removeRound, removeCourse } from '../storage';
-import {format} from 'date-fns';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function TabIndexScreen() {
-
-  interface Player {
-    name: string,
-    score: number,
-    id: number,
-    scoreToAdd: string
-  }
 
   const [groupSize, setGroupSize] = useState<number>(0);
   const [scoreSize, setScoreSize] = useState<number>(0);
@@ -23,13 +15,13 @@ export default function TabIndexScreen() {
   const [courses, setCourses] = useState<string[] | undefined>([]);
   const [errorMsg, setErrorMsg] = useState<string>(''); 
   const [newCourse, setNewCourse] = useState<string>('');
-  const [addModalVisible, setAddModalVisible] = useState(false);
-  const [courseModalVisible, setCourseModalVisible] = useState(false);
+  const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
+  const [courseModalVisible, setCourseModalVisible] = useState<boolean>(false);
 
+  // Fetches all courses from the database
   const fetchData = async () => {
 
     try {
-
       let fetchResult: string[] | undefined = await getAllCourses();
 			fetchResult !== undefined ? setCourses(fetchResult) : setErrorMsg('Problem fetching data');
 
@@ -38,12 +30,7 @@ export default function TabIndexScreen() {
     }
   }
 
-  useEffect(() => {
-
-    fetchData()
-
-  },[]);
-
+  // Adds players to an array at the round start
   const intializePlayers = (numberOfPlayers: number): void => {
     
     const players: Player[] = [];
@@ -62,6 +49,7 @@ export default function TabIndexScreen() {
     setGroupSize(numberOfPlayers);
   }
 
+  // Handles the saving of the round and all of the player info
   const handleRoundSave = (): void => {
 
     const playerScores: PlayerScore[] = [];
@@ -77,14 +65,14 @@ export default function TabIndexScreen() {
 
     storeRound({
       courseName: selectedCourse?.toString(),
-      date: `${format(new Date(),'dd.MM.y').toString()}`,
-      time: `${format(new Date(),'HH:mm').toString()}`,
+      date: `${new Date().toString()}`,
+      time: `${new Date().toString()}`,
       players: playerScores
     });
-
     setGroupSize(0);
   }
 
+  // Handles the score counting for each player
   const countScore = (num: number, operation: string, player: Player): void => {
 
     let arrIdx = player.id - 1;
@@ -107,12 +95,13 @@ export default function TabIndexScreen() {
       This doesn't do anything, but it is left here to refresh the view. Definitely not ideal but adding user input scores now works as intended.
       You can see the number as you edit, and the Pressable turns to default - '+/-' - onSubmitEditing.
     */
-      setScoreToAdd(newScore);
+    setScoreToAdd(newScore);
   }
 
-  const createAlert = (courseName : string) => {
+  // Creates an alert confirming course deletion
+  const createDeleteAlert = (courseName : string) => {
 
-    Alert.alert('Delete course', `Are you sure you want to delete course: ${courseName} ?`, [
+    Alert.alert('Delete course?', `Are you sure you want to delete course: ${courseName} ?`, [
       {
         text: 'Delete', 
         onPress: () => {
@@ -127,11 +116,36 @@ export default function TabIndexScreen() {
     ]);
   }
 
+  // Creates an alert confirming the round save
+  const createSaveAlert = (): void => {
+
+    Alert.alert('Save round?', `Are you sure want to save the current round?`, [
+      {
+        text: 'Save', 
+        onPress: () => {
+          handleRoundSave();
+          getAllSavedRounds();
+        }
+      },
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+    ]);
+  }
+
+  useEffect(() => {
+
+    fetchData()
+
+  },[]);
+
   return (
 
     <View style={styles.container}>
 
       { (groupSize == 0 || group.length < 1 || selectedCourse === 'Select a course...')
+
         ? <View>
 
             <View style={styles.courseInputs}>
@@ -171,7 +185,9 @@ export default function TabIndexScreen() {
                           <ScrollView style={styles.modalScrollView}>
 
                             {courses.map((course: string, idx : number) => (
+
                               <View style={styles.courseListItem} key={idx}>
+
                                 <Pressable 
                                   style={styles.courseListItemInfo} 
                                   onPress={() => {
@@ -182,7 +198,7 @@ export default function TabIndexScreen() {
                                   <Text style={styles.courseListName}>{course}</Text>
 
                                   <Pressable
-                                    onPress={() => createAlert(course)}
+                                    onPress={() => createDeleteAlert(course)}
                                     style={styles.deleteCourse}
                                   >
                                     <FontAwesome size={20} name='trash' style={{color: '#FAF9F6', alignSelf: 'center'}}/>
@@ -223,9 +239,7 @@ export default function TabIndexScreen() {
                       <View style={styles.courseAdder}>
                         <TextInput
                           selectTextOnFocus={true}
-                          placeholderTextColor= '#4361ee'
                           autoCorrect={false}
-                          placeholder='Forest Course Am, Etc. ...'
                           selectionColor='#4361ee'
                           value={newCourse}
                           style={styles.courseAdderInput}
@@ -305,19 +319,18 @@ export default function TabIndexScreen() {
 
         : <View style={styles.container}>
 
-                 
             <View style={styles.topInfo}>
               <Text style={styles.title}>{selectedCourse}</Text> 
               <Pressable 
                 style={styles.saveRoundButton}
                 onPress={() => {
-                  handleRoundSave();
-                  getAllSavedRounds();
+                  createSaveAlert();
                 }}
               >
-                <Text style={styles.saveRoundButtonContent}>Save Round</Text>
+                <FontAwesome size={30} name='save' style={{color: '#FAF9F6', alignSelf: 'center'}}/>
               </Pressable>
             </View>
+
             <Text style={{color: '#4361ee', marginLeft: 20}}>Group size: {groupSize.toString()}</Text>
 
             <ScrollView style={styles.scrollBox}>
@@ -562,24 +575,21 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   title: {
-    flex: 5,
+    flex: 6,
     fontSize: 30,
     fontWeight: 'bold',
     alignSelf: 'center',
     marginTop: 10,
-    color: '#4361ee'
+    color: '#4361ee',
   },
   saveRoundButton: {
     flex: 1,
     justifyContent: 'center',
-    padding: 5,
-    marginTop: 10,
+    padding: 10,
     borderRadius: 10,
     backgroundColor: '#4361ee',
     elevation: 5,
-  },
-  saveRoundButtonContent: {
-    alignSelf: 'center'
+    flexDirection: 'row'
   },
   scrollBox: {
     flex: 1,
@@ -633,7 +643,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 10
+    paddingVertical: 10
   },
   scoreButton: {
     flex: 1,

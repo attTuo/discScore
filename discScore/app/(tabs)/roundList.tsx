@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { removeRound, getAllSavedRounds, clearAll, StorageResult, PlayerScore, getAllCourses } from '../storage';
 import { Alert, Pressable, StyleSheet, ScrollView } from 'react-native';
-import { Text, View } from '@/components/Themed';
-import { removeRound, getAllSavedRounds, clearAll, StorageResult, PlayerScore, getAllCourses, monthNames } from '../storage';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import React, { useState, useEffect } from 'react';
+import { Text, View } from '@/components/Themed';
+import {format} from 'date-fns';
 
 export default function TabRoundsScreen() {
-
-	interface Dropdown {
-		open: boolean,
-		id: number
-	}
  
   const [data, setData] = useState<StorageResult[] | undefined>([]);
   const [errorMsg, setErrorMsg] = useState<string>('');
@@ -17,6 +13,7 @@ export default function TabRoundsScreen() {
 	const [courseDropdowns, setcourseDropdowns] = useState<boolean[]>([]);
 	const [courses, setCourses] = useState<string[] | undefined>([]);
 
+	// Fetches all saved courses from the database
 	const fetchCourses = async (): Promise<void> => {
 
     try {
@@ -36,7 +33,7 @@ export default function TabRoundsScreen() {
     }
   }
 
-
+	// Fetches all the saved rounds from the database
   const fetchSavedRounds = async (): Promise<void> => {
 
     try {
@@ -56,17 +53,10 @@ export default function TabRoundsScreen() {
     }
   }
 
+	// Creates an alert confirming saved round deletion
+	const createDeleteAlert = (key: string): void => {
 
-  useEffect(() => {
-
-		fetchCourses();
-    fetchSavedRounds();
-    
-  }, []);
-
-	const createAlert = (key: string): void => {
-
-    Alert.alert('Delete round', `Are you sure want to delete the round? Round played: ${key}`, [
+    Alert.alert('Delete round?', `Are you sure want to delete the round? Round played: ${key}`, [
       {
         text: 'Delete', 
         onPress: () => {
@@ -81,21 +71,40 @@ export default function TabRoundsScreen() {
     ]);
   }
 
+	// Creates an alert confirming wiping all Async Storage data
+	const createWipeAlert = (): void => {
 
+    Alert.alert('Warning!', `Are you sure want to delete ALL APP DATA?`, [
+      {
+        text: 'Delete', 
+        onPress: () => {
+          clearAll();
+        }
+      },
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+    ]);
+  }
+
+	// Handles the state of all of the dropdowns
 	const handleDropdowns = (index: number, todo: string, type: string): void => {
 
 		if (todo === 'open') {
+
 			if(type === 'course') {
-				courseDropdowns.map((item, idx) => idx === index ? courseDropdowns.splice(idx, 1, true) : false);
+				courseDropdowns.map((item, idx: number) => idx === index ? courseDropdowns.splice(idx, 1, true) : false);
 			} else if (type === 'round') {
-				roundDropdowns.map((item, idx) => idx === index ? roundDropdowns.splice(idx, 1, true) : false);
+				roundDropdowns.map((item, idx: number) => idx === index ? roundDropdowns.splice(idx, 1, true) : false);
 			}
 			
 		} else if (todo === 'close'){
+
 				if(type === 'course') {
-					courseDropdowns.map((item, idx: number) => idx === index ? courseDropdowns.splice(idx, 1, false) : false);
+					courseDropdowns.map((item, idx: number) => idx === index ? courseDropdowns.splice(idx, 1, false) : true);
 				}	else if (type === 'round') {
-					roundDropdowns.map((item, idx: number) => idx === index ? roundDropdowns.splice(idx, 1, false) : false);
+					roundDropdowns.map((item, idx: number) => idx === index ? roundDropdowns.splice(idx, 1, false) : true);
 				}
 		}
 		
@@ -104,18 +113,12 @@ export default function TabRoundsScreen() {
 		fetchSavedRounds();
 	}
 
-	const getMonth = (roundTime: string) => {
+	useEffect(() => {
 
-		let months: string[] = monthNames;
-		let strArray: string[] = roundTime.split('');
-		let monthNumber: string[] = strArray.splice(3,2);
-
-		if (monthNumber[0] === '0'){
-			monthNumber = monthNumber.splice(1,1);
-		}
-
-		return months[Number(monthNumber) - 1];
-	}
+		fetchCourses();
+    fetchSavedRounds();
+    
+  }, []);
 
   return (
 
@@ -123,7 +126,7 @@ export default function TabRoundsScreen() {
 
 			<View style={styles.topContent}>
 				
-				<Text style={styles.title}>Saved Rounds</Text>
+				<Text style={styles.title}>Saved rounds</Text>
 
 				<Pressable
 					onPress={() => {fetchCourses(); fetchSavedRounds();}}
@@ -171,12 +174,12 @@ export default function TabRoundsScreen() {
 																<View style={styles.upperInfo}>
 
 																	<View style={styles.dateTimeInfo}>
-																		<Text style={styles.monthText}>{getMonth(round.value.date)}</Text>
+																		<Text style={styles.monthText}>{format(round.value.date, 'MMMM'.toString())}</Text>
 
 																	</View>
 																	<View style={styles.dateTimeInfo}>
-																		<Text style={styles.dateTimeText}>{round.value.date}</Text>
-																		<Text style={styles.dateTimeText}>{round.value.time}</Text>
+																		<Text style={styles.dateTimeText}>{format(round.value.date, 'dd.MM.y'.toString())}</Text>
+																		<Text style={styles.dateTimeText}>{format(round.value.time, 'HH:mm'.toString())}</Text>
 																		
 																	</View>
 													
@@ -203,7 +206,7 @@ export default function TabRoundsScreen() {
 																		<Pressable style={styles.removeButton}
 																			onPress={() => {
 																				data.slice(idx - 1);
-																				createAlert(data[idx].key);
+																				createDeleteAlert(data[idx].key);
 																				fetchSavedRounds();
 																			}}
 																		>
@@ -230,10 +233,19 @@ export default function TabRoundsScreen() {
 
 					))}
 
+								<Pressable style={styles.clearAllButton}
+									onLongPress={() => {
+										createWipeAlert();
+									}}
+								>
+									<FontAwesome size={22} name='warning' style={{color: 'red', alignSelf: 'center'}}/>
+								</Pressable>
 					</ScrollView>
+					
 
 				: <></>
 			}
+																		
     </View>
   );
 }
@@ -372,4 +384,14 @@ const styles = StyleSheet.create({
 	flexRow: {
 		flex: 2
 	},
+	clearAllButton: {
+		textAlign: 'center',
+		backgroundColor: '#4361ee',
+		alignSelf: 'flex-start',
+		alignItems: 'center',
+		padding: 10,
+		marginBottom: 10,
+		borderRadius: 10,
+		elevation: 5
+	}
 });
