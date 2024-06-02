@@ -150,14 +150,15 @@ export default function TabIndexScreen() {
 
             <View style={styles.courseInputs}>
 
-            <Pressable
-              onPress={() => setCourseModalVisible(true)}
-              style={styles.pickerBox}
-            >
-              <Text>{selectedCourse}</Text>
-            </Pressable>
+              <Pressable
+                onPress={() => setCourseModalVisible(true)}
+                style={styles.pickerBox}
+              >
+                <Text>{selectedCourse}</Text>
+              </Pressable>
 
               { (courses)
+
                 ? <View>
 
                     <Modal
@@ -178,7 +179,6 @@ export default function TabIndexScreen() {
                           >
                             <FontAwesome size={20} name='close' style={{color: '#4361ee'}}/>
                           </Pressable>
-
 
                           <Text style={styles.modalText}>Courses:</Text>
 
@@ -213,57 +213,60 @@ export default function TabIndexScreen() {
                   </View>
                 :<></>
               }
-
               
-                <Modal
-                  animationType="slide"
-                  transparent={true}
-                  visible={addModalVisible}
-                  onRequestClose={() => {
-                    setAddModalVisible(!addModalVisible);
-                  }}
-                >
-                  <View style={styles.centeredView}>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={addModalVisible}
+                onRequestClose={() => {
+                  setAddModalVisible(!addModalVisible);
+                }}
+              >
+                <View style={styles.centeredView}>
 
-                    <View style={styles.modalView}>
+                  <View style={styles.modalView}>
 
-                      <Pressable
-                        style={styles.closeModalButton}
-                        onPress={() => setAddModalVisible(!addModalVisible)}
-                      >
-                        <FontAwesome size={20} name='close' style={{color: '#4361ee'}}/>
-                      </Pressable>
-                    
-                      <Text style={styles.modalText}>Add a new course:</Text>
+                    <Pressable
+                      style={styles.closeModalButton}
+                      onPress={() => setAddModalVisible(!addModalVisible)}
+                    >
+                      <FontAwesome size={20} name='close' style={{color: '#4361ee'}}/>
+                    </Pressable>
+                  
+                    <Text style={styles.modalText}>Add a new course:</Text>
 
-                      <View style={styles.courseAdder}>
-                        <TextInput
-                          selectTextOnFocus={true}
-                          autoCorrect={false}
-                          selectionColor='#4361ee'
-                          value={newCourse}
-                          style={styles.courseAdderInput}
-                          onChangeText={newName => setNewCourse(newName)}
-                          onSubmitEditing={() => {
-                            storeCourse(newCourse);
-                            setNewCourse('');
-                            fetchData();
-                          }}
-                        />
-                      </View>
-
+                    <View style={styles.courseAdder}>
+                      <TextInput
+                        selectTextOnFocus={true}
+                        autoCorrect={false}
+                        selectionColor='#4361ee'
+                        value={newCourse}
+                        style={styles.courseAdderInput}
+                        onChangeText={newName => setNewCourse(newName)}
+                        onSubmitEditing={() => {
+                          storeCourse(newCourse);
+                          setNewCourse('');
+                          fetchData();
+                        }}
+                      />
                     </View>
-                  </View>
-                </Modal>
 
-                <Pressable
-                  style={styles.modalButton}
-                  onPress={() => setAddModalVisible(true)}>
-                  <FontAwesome size={30} name='plus' style={{color: '#FAF9F6', alignSelf: 'center'}}/>
-                </Pressable>
-              
+                  </View>
+                </View>
+              </Modal>
+
+              <Pressable
+                style={styles.modalButton}
+                onPress={() => setAddModalVisible(true)}>
+                <FontAwesome size={30} name='plus' style={{color: '#FAF9F6', alignSelf: 'center'}}/>
+              </Pressable>
 
             </View>
+
+            { (errorMsg)
+              ?<Text style={{color: 'red', alignSelf: 'center'}}>{errorMsg}</Text>
+              :<></>
+            }
 
             <Text style={{color: '#4361ee', alignSelf: 'center'}}>Select the number of players:</Text>
 

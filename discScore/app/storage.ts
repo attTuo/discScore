@@ -49,7 +49,9 @@ export interface Player {
   scoreToAdd: string
 }
 
-// Storage functions
+// Storage functions----------------------------
+
+// Handles the saving of a course to the database
 export const storeCourse = async (value: string) => {
   
   try {
@@ -60,6 +62,7 @@ export const storeCourse = async (value: string) => {
   }
 };
 
+// Fetches all of the courses from the database
 export const getAllCourses = async () => {
 
   let courses: string[] = [];
@@ -84,6 +87,7 @@ export const getAllCourses = async () => {
 	}
 }
 
+// Stores a played round to the database
 export const storeRound = async (value: RoundScore) => {
   
   try {
@@ -96,17 +100,7 @@ export const storeRound = async (value: RoundScore) => {
   }
 };
 
-export const getData = async () => {
-
-  try {
-    const jsonValue = await AsyncStorage.getItem('round-key');
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-
-  } catch (error) {
-    console.log(error);
-  }
-}
-
+// Fetches and returns all saved rounds, doesn't count in the courses
 export const getAllSavedRounds = async () => {
 
   let rounds: StorageResult[] = [];
@@ -134,26 +128,27 @@ export const getAllSavedRounds = async () => {
 	}
 }
 
+// Removes a specific round when given the key (date in this case) of the saved item
 export const removeRound = async (key: string) => {
 
   try {
-    await AsyncStorage.removeItem(`${key}`)
-    console.log('Round removed.')
+    await AsyncStorage.removeItem(`${key}`);
   } catch(error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
+// Removes a saved course from the database when given the course name as a parameter
 export const removeCourse = async (key: string) => {
 
   try {
-    await AsyncStorage.removeItem(`${key}`)
+    await AsyncStorage.removeItem(`${key}`);
   } catch(error) {
-    console.log(error)
+    console.log(error);
   }
-  console.log('Course removed.')
 }
 
+// Clears all Async Storage data
 export const clearAll = async () => {
   
   try {
@@ -161,5 +156,4 @@ export const clearAll = async () => {
   } catch(error) {
     console.log(error);
   }
-  console.log('Cleared all AsyncStorage data');
 }
