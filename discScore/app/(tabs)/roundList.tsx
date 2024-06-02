@@ -128,6 +128,11 @@ export default function TabRoundsScreen() {
 				
 				<Text style={styles.title}>Saved rounds</Text>
 
+				{ (errorMsg)
+					? <Text style={{color: 'red', alignSelf: 'center'}}>{errorMsg}</Text>
+					:<></>
+				}
+
 				<Pressable
 					onPress={() => {fetchCourses(); fetchSavedRounds();}}
 					style={styles.refreshButton}
@@ -140,98 +145,91 @@ export default function TabRoundsScreen() {
 
 				?	<ScrollView style={styles.scrollBox}>
 
-					{courses?.map((course: string, idx : number) =>	(
+						{courses?.map((course: string, idx : number) =>	(
 
-						<Pressable
-							onPress={() => !courseDropdowns[idx] ? handleDropdowns(idx, 'open', 'course') : handleDropdowns(idx, 'close', 'course')}
-							style={styles.courseListItem}
-							key={idx}
-						>
-							<View style={styles.upperInfo}>
-								<Text style={styles.courseName}>{course}</Text>
+							<Pressable
+								onPress={() => !courseDropdowns[idx] ? handleDropdowns(idx, 'open', 'course') : handleDropdowns(idx, 'close', 'course')}
+								style={styles.courseListItem}
+								key={idx}
+							>
+								<View style={styles.upperInfo}>
+									<Text style={styles.courseName}>{course}</Text>
 
-								{	(!courseDropdowns[idx])
-									?	<FontAwesome size={28} name='caret-down' style={{color: '#FAF9F6', alignSelf: 'center', marginLeft: 10}}/>
-									:	<FontAwesome size={28} name='caret-up' style={{color: '#FAF9F6', alignSelf: 'center', marginLeft: 10}}/>
-								}
-								
-							</View>
+									{	(!courseDropdowns[idx])
+										?	<FontAwesome size={28} name='caret-down' style={{color: '#FAF9F6', alignSelf: 'center', marginLeft: 10}}/>
+										:	<FontAwesome size={28} name='caret-up' style={{color: '#FAF9F6', alignSelf: 'center', marginLeft: 10}}/>
+									}
+									
+								</View>
 
-							{ (courseDropdowns[idx])
+								{ (courseDropdowns[idx])
 
-								? <ScrollView style={styles.roundScrollBox} nestedScrollEnabled={true}>
+									? <ScrollView style={styles.roundScrollBox} nestedScrollEnabled={true}>
 
-										{data?.map( (round: StorageResult, idx: number) => (
-											
-											<View style={styles.roundBox} key={idx}>
+											{data?.map( (round: StorageResult, idx: number) => (
+												
+												<View style={styles.roundBox} key={idx}>
 
-												{ (course === round.value.courseName)
+													{ (course === round.value.courseName)
 
-													?	<Pressable
-															onPress={() => !roundDropdowns[idx] ? handleDropdowns(idx, 'open', 'round') : handleDropdowns(idx, 'close', 'round')}
-															style={styles.roundListItem}
-														>
-																<View style={styles.upperInfo}>
+														?	<Pressable
+																onPress={() => !roundDropdowns[idx] ? handleDropdowns(idx, 'open', 'round') : handleDropdowns(idx, 'close', 'round')}
+																style={styles.roundListItem}
+															>
+																	<View style={styles.upperInfo}>
 
-																	<View style={styles.dateTimeInfo}>
-																		<Text style={styles.monthText}>{format(round.value.date, 'MMMM'.toString())}</Text>
+																		<View style={styles.dateTimeInfo}>
+																			<Text style={styles.monthText}>{format(round.value.date, 'MMMM'.toString())}</Text>
 
-																	</View>
-																	<View style={styles.dateTimeInfo}>
-																		<Text style={styles.dateTimeText}>{format(round.value.date, 'dd.MM.y'.toString())}</Text>
-																		<Text style={styles.dateTimeText}>{format(round.value.time, 'HH:mm'.toString())}</Text>
+																		</View>
+																		<View style={styles.dateTimeInfo}>
+																			<Text style={styles.dateTimeText}>{format(round.value.date, 'dd.MM.y'.toString())}</Text>
+																			<Text style={styles.dateTimeText}>{format(round.value.time, 'HH:mm'.toString())}</Text>
+																			
+																		</View>
+														
+																		{	(!roundDropdowns[idx])	
+																			?	<FontAwesome size={28} name='caret-down' style={{color: '#FAF9F6', alignSelf: 'center', marginLeft: 10, paddingLeft: 10, borderLeftWidth: 1, borderColor: 'white'}}/>
+																			:<FontAwesome size={28} name='caret-up' style={{color: '#FAF9F6', alignSelf: 'center', marginLeft: 10, paddingLeft: 10, borderLeftWidth: 1, borderColor: 'white'}}/>
+																		}
 																		
 																	</View>
-													
-																	{	(!roundDropdowns[idx])	
-																		?	<FontAwesome size={28} name='caret-down' style={{color: '#FAF9F6', alignSelf: 'center', marginLeft: 10, paddingLeft: 10, borderLeftWidth: 1, borderColor: 'white'}}/>
-																		:<FontAwesome size={28} name='caret-up' style={{color: '#FAF9F6', alignSelf: 'center', marginLeft: 10, paddingLeft: 10, borderLeftWidth: 1, borderColor: 'white'}}/>
-																	}
-																	
-																</View>
-															
-		
-															{ (roundDropdowns[idx])
-		
-																?	<View style={styles.roundInfo}>
-		
-																		{round.value.players.map( (player: PlayerScore, idx: number) => (
-		
-																			<View style={styles.playerInfo} key={idx}>
-																				<Text style={styles.playerName}>{player.playerName}</Text>
-																				<Text style={styles.playerScore}>Score: {player.score}</Text>
-																			</View>
-																		))}
-		
-																		<Pressable style={styles.removeButton}
-																			onPress={() => {
-																				data.slice(idx - 1);
-																				createDeleteAlert(data[idx].key);
-																				fetchSavedRounds();
-																			}}
-																		>
-																			<FontAwesome size={22} name='trash' style={{color: '#FAF9F6', alignSelf: 'center'}}/>
-																		</Pressable>
-		
-																	</View>
-																	
-																:	<></>
-															}	
-														</Pressable>
-													:<></>
-
-												}		
-
-											</View>
-										))}
-									</ScrollView>
-
-								:<></>
-
-							}
-						</Pressable>
-
-					))}
+																
+																{ (roundDropdowns[idx])
+			
+																	?	<View style={styles.roundInfo}>
+			
+																			{round.value.players.map( (player: PlayerScore, idx: number) => (
+			
+																				<View style={styles.playerInfo} key={idx}>
+																					<Text style={styles.playerName}>{player.playerName}</Text>
+																					<Text style={styles.playerScore}>Score: {player.score}</Text>
+																				</View>
+																			))}
+			
+																			<Pressable style={styles.removeButton}
+																				onPress={() => {
+																					data.slice(idx - 1);
+																					createDeleteAlert(data[idx].key);
+																					fetchSavedRounds();
+																				}}
+																			>
+																				<FontAwesome size={22} name='trash' style={{color: '#FAF9F6', alignSelf: 'center'}}/>
+																			</Pressable>
+			
+																		</View>
+																	:	<></>
+																}	
+															</Pressable>
+														:<></>
+													}		
+												</View>
+											))}
+										</ScrollView>
+									:<></>
+								}
+							</Pressable>
+						))}
 
 								<Pressable style={styles.clearAllButton}
 									onLongPress={() => {
@@ -241,11 +239,8 @@ export default function TabRoundsScreen() {
 									<FontAwesome size={22} name='warning' style={{color: 'red', alignSelf: 'center'}}/>
 								</Pressable>
 					</ScrollView>
-					
-
 				: <></>
-			}
-																		
+			}													
     </View>
   );
 }

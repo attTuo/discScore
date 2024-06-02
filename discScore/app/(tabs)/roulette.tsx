@@ -24,7 +24,6 @@ export default function TabRouletteScreen() {
     return Math.floor(Math.random() * arraySize);
   }
 
-
   return (
 
     <View style={styles.container}>
